@@ -76,7 +76,7 @@ public class HorrocruxGameManager : MonoBehaviour
         countdown = currentTimeLimit;
 
         currentTimeLimit -= timeDecreasePerHorrocrux;
-        if (currentTimeLimit < 4f) currentTimeLimit = 4f;
+        if (currentTimeLimit < 2f) currentTimeLimit = 2f;
     }
 
     // llamado por HorrocruxController
