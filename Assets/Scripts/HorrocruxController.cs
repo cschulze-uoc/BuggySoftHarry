@@ -39,6 +39,9 @@ public class HorrocruxController : MonoBehaviour
                 gazeTimer = 0f;
                 isGazed = false;
                 SetMaterial(false);
+                
+                AudioManager.Instance.StopHover();
+                AudioManager.Instance.PlayCollect();
             }
         }
         else
@@ -55,6 +58,7 @@ public class HorrocruxController : MonoBehaviour
     {
         isGazed = true;
         SetMaterial(true);
+        AudioManager.Instance.PlayHover();
     }
 
     public void OnPointerExit()
@@ -63,6 +67,7 @@ public class HorrocruxController : MonoBehaviour
         gazeTimer = 0f;
         SetMaterial(false);
         HUDController.Instance.UpdateGazeProgress(0f);
+        AudioManager.Instance.StopHover();
     }
 
     private void SetMaterial(bool gazedAt)
