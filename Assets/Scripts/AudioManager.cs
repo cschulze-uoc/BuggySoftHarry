@@ -7,6 +7,7 @@ public class AudioManager : MonoBehaviour
     [Header("Clips")]
     public AudioClip hoverClip;
     public AudioClip collectClip;
+     public AudioClip loseClip;
 
     private AudioSource source;
 
@@ -38,5 +39,11 @@ public class AudioManager : MonoBehaviour
     {
         source.loop = false;
         source.PlayOneShot(collectClip);
+    }
+
+    public void PlayLose()
+    {
+        source.loop = false;
+        source.PlayOneShot(loseClip);
     }
 }

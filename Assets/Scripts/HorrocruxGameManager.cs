@@ -97,4 +97,10 @@ public class HorrocruxGameManager : MonoBehaviour
         HUDController.Instance.UpdateScore(score);
         SpawnHorrocrux();
     }
+
+    public void OnSnakeViewed()
+    {
+        score--;
+        HUDController.Instance.UpdateScore(score);
+    }
 }
