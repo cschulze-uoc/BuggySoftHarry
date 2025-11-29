@@ -16,6 +16,7 @@ public class PersonajeCaptura: MonoBehaviour
     {
         if (otro.CompareTag("AnimalHerido"))
         {
+            FindObjectOfType<GameManager>().SumarAnimal();
             Destroy(otro.gameObject);
         }
     }
