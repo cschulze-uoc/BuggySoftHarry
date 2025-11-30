@@ -5245,6 +5245,7 @@ GameObject:
   - component: {fileID: 1068124107}
   - component: {fileID: 1068124106}
   - component: {fileID: 1068124109}
+  - component: {fileID: 1068124110}
   m_Layer: 0
   m_Name: Personaje
   m_TagString: Untagged
@@ -5346,6 +5347,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Personaje
   velocidad: 3
   colRed: {fileID: 1584953472}
+  audioSource: {fileID: 0}
 --- !u!82 &1068124109
 AudioSource:
   m_ObjectHideFlags: 0
@@ -5357,11 +5359,11 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
-  m_Resource: {fileID: 0}
+  m_Resource: {fileID: 8300000, guid: eb8ac0f04f2bac14481b9aa5302033c1, type: 3}
   m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
-  Loop: 0
+  Loop: 1
   Mute: 0
   Spatialize: 0
   SpatializePostEffects: 0
@@ -5443,6 +5445,14 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!81 &1068124110
+AudioListener:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1068124103}
+  m_Enabled: 1
 --- !u!1 &1584953470
 GameObject:
   m_ObjectHideFlags: 0
