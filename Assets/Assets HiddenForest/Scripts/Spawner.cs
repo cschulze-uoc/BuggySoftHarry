@@ -1,12 +1,18 @@
 using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class AnimalSpawner : MonoBehaviour
 {
-    public GameObject[] animalesPrefabs;  // prefabs de los animales
-    public Transform[] posiciones;         // posiciones posibles
-    public float intervalo = 5f;           // cada cuanto aparece un animal
-    public float tiempoVida = 10f;         // tiempo antes de que el animal desaparezca si no lo capturan
+    public GameObject[] animalesPrefabs;
+    public Transform[] posiciones;
+
+    public float intervalo = 5f;
+    public float tiempoVida = 10f;
+
+
+    private List<GameObject> animalesEnPantalla = new List<GameObject>();
+    private HashSet<int> posicionesOcupadas = new HashSet<int>();
 
     void Start()
     {
@@ -19,31 +25,57 @@ public class AnimalSpawner : MonoBehaviour
         {
             yield return new WaitForSeconds(intervalo);
 
-            // Elegir animal aleatorio
-            int indiceAnimal = Random.Range(0, animalesPrefabs.Length);
-            GameObject prefab = animalesPrefabs[indiceAnimal];
+            // animales disponibles
+            List<GameObject> animalesDisponibles = new List<GameObject>();
+            foreach (var animalPrefab in animalesPrefabs)
+            {
+                bool yaExiste = animalesEnPantalla.Exists(a =>
+                    a != null && a.name.Contains(animalPrefab.name));
 
-            // Elegir posicion aleatoria
-            int indicePos = Random.Range(0, posiciones.Length);
-            Vector3 spawnPos = posiciones[indicePos].position;
+                if (!yaExiste)
+                    animalesDisponibles.Add(animalPrefab);
+            }
 
-            // Instanciar animal
-            GameObject animal = Instantiate(prefab, spawnPos, Quaternion.identity);
+            if (animalesDisponibles.Count == 0)
+                continue;
 
-            // Iniciar coroutine para que desaparezca si no es capturado
-            StartCoroutine(DesaparecerAnimal(animal));
+            // posiciones libres
+            List<int> posicionesLibres = new List<int>();
+            for (int i = 0; i < posiciones.Length; i++)
+            {
+                if (!posicionesOcupadas.Contains(i))
+                    posicionesLibres.Add(i);
+            }
+
+            if (posicionesLibres.Count == 0)
+                continue;
+
+            // elegir animal
+            GameObject animalPrefabElegido =
+                animalesDisponibles[Random.Range(0, animalesDisponibles.Count)];
+
+            // elegir posicion visible
+            int indexPos = posicionesLibres[Random.Range(0, posicionesLibres.Count)];
+            Transform posVisible = posiciones[indexPos];
+
+            posicionesOcupadas.Add(indexPos);
+
+
+            // Instanciar en la posicion oculta
+            GameObject animal = Instantiate(animalPrefabElegido, posVisible.position, Quaternion.identity);
+            animalesEnPantalla.Add(animal);
+
+            // Iniciar secuencia completa
+            StartCoroutine(DesaparecerAnimal(animal, indexPos));
         }
     }
 
-    IEnumerator DesaparecerAnimal(GameObject animal)
+    IEnumerator DesaparecerAnimal(GameObject animal, int indexPos)
     {
         yield return new WaitForSeconds(tiempoVida);
 
-        if (animal != null)
-        {
-            // Ejemplo: mover un poco antes de destruir
-            animal.transform.Translate(Vector3.forward * 2f);
-            Destroy(animal, 0.5f);
-        }
+        Destroy(animal);
+        posicionesOcupadas.Remove(indexPos);
+        animalesEnPantalla.Remove(animal);
     }
 }

@@ -4732,8 +4732,10 @@ MonoBehaviour:
   - {fileID: 4285841805828878678, guid: 2d843c0dd764948409aac5d8381a69e7, type: 3}
   - {fileID: 3929670377953986571, guid: 77e214ebea93d214a9e9b979c9195868, type: 3}
   - {fileID: 1003650940340666511, guid: 15b40dbbb24fd9046beb3229f1b11d58, type: 3}
+  posicionInicial: 4
   intervalo: 5
   tiempoVida: 10
+  velocidadMovimiento: 3
 --- !u!4 &497863621
 Transform:
   m_ObjectHideFlags: 0
