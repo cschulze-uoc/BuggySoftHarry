@@ -60,12 +60,20 @@
         "*.asset": "yaml",
         "*.meta": "yaml",
         "*.prefab": "yaml",
+<<<<<<< HEAD
         "*.unity": "yaml",
+=======
+        "*.unity": "yaml"
+>>>>>>> 7ef72de (Producto2)
     },
     "explorer.fileNesting.enabled": true,
     "explorer.fileNesting.patterns": {
         "*.sln": "*.csproj",
         "*.slnx": "*.csproj"
     },
+<<<<<<< HEAD
     "dotnet.defaultSolution": "BuggySoft_Harry.slnx"
+=======
+    "dotnet.defaultSolution": "BuggySoftHarry-main.slnx"
+>>>>>>> 7ef72de (Producto2)
 }
