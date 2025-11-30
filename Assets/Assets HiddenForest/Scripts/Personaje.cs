@@ -11,6 +11,10 @@ public class Personaje : MonoBehaviour
     [Header("SonidoPasos")]
     [SerializeField] private AudioSource audioSource;
 
+    [Header("SonidoRed")]
+    [SerializeField] private AudioSource audioGolpe;
+    [SerializeField] private AudioClip clipGolpe;
+
     private Rigidbody2D rig;
     private Vector2 movimiento;
     private Animator anim;
@@ -33,7 +37,22 @@ public class Personaje : MonoBehaviour
     private void Update()
     {
         Movimiento();
-        Captura(); 
+        Captura();
+
+        // Usar el parámetro "Anda" del Animator para activar/desactivar audio
+        float velocidadAnim = anim.GetFloat("Anda");
+
+        // Activar/desactivar audio de pasos
+        if (velocidadAnim > 0.1f) // si el personaje se mueve
+        {
+            if (!audioSource.isPlaying)
+                audioSource.Play();
+        }
+        else // personaje parado
+        {
+            if (audioSource.isPlaying)
+                audioSource.Pause();
+        }
     }
 
     private void FixedUpdate()
@@ -66,20 +85,9 @@ public class Personaje : MonoBehaviour
             spritePersonaje.flipX = true;
         }
 
-        // Usar el parámetro "Anda" del Animator para activar/desactivar audio
-        float velocidadAnim = anim.GetFloat("Anda");
+      
 
-        // Activar/desactivar audio de pasos
-        if (velocidadAnim > 0.1f) // si el personaje se mueve
-        {
-            if (!audioSource.isPlaying)
-                audioSource.Play();
-        }
-        else // personaje parado
-        {
-            if (audioSource.isPlaying)
-                audioSource.Pause();
-        }
+        
 
     }
 
