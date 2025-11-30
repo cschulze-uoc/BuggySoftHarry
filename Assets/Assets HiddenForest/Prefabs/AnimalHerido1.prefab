@@ -125,6 +125,7 @@ GameObject:
   - component: {fileID: 3592723803627450699}
   - component: {fileID: 2774745777600554330}
   - component: {fileID: -47786543992468114}
+  - component: {fileID: -4586902224490128905}
   m_Layer: 0
   m_Name: AnimalHerido1
   m_TagString: AnimalHerido
@@ -309,3 +310,16 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &-4586902224490128905
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5627634729513195699}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b727aaa2f32f5fa4bb39c950ade681cf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DebugDistance
+  player: {fileID: 0}
