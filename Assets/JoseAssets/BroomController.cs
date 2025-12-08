@@ -15,7 +15,14 @@ public class BroomController : MonoBehaviour
     {
         if (!isAlive) return;
 
+        // --- PC (ratón y teclado)
         if (Input.GetKeyDown(KeyCode.Space) || Input.GetMouseButtonDown(0))
+        {
+            Jump();
+        }
+
+        // --- MÓVIL (pantalla táctil)
+        if (Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Began)
         {
             Jump();
         }
@@ -23,7 +30,9 @@ public class BroomController : MonoBehaviour
 
     private void Jump()
     {
+        // reset vertical para que el salto sea consistente
         rb.linearVelocity = new Vector2(rb.linearVelocity.x, 0f);
+
         rb.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
     }
 
@@ -33,9 +42,9 @@ public class BroomController : MonoBehaviour
 
         isAlive = false;
         rb.linearVelocity = Vector2.zero;
-        rb.gravityScale = 0f; // 🔥 evita la caída infinita
+        rb.gravityScale = 0f; // evita caída infinita
 
-        GameManager.Instance.GameOver(); // 🔥 AVISA AL GAME MANAGER
+        GameManager.Instance.GameOver();
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
