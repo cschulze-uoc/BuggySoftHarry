@@ -5,9 +5,17 @@ using System.Collections.Generic;
 public class HorrocruxGameManager : MonoBehaviour
 {
     public static HorrocruxGameManager Instance;
+
     private int lastIndex = -1;
+
+    // Puntuación LOCAL de este minijuego
     private int score = 0;
+
+    // Puntuación global con la que entramos a este minijuego
+    private int baseGlobalScore = 0;
+
     private bool primera = true;
+    private bool isGameOver = false;
 
     [Header("Settings")]
     public Transform horrocrux;               // El único horrocrux
@@ -25,19 +33,61 @@ public class HorrocruxGameManager : MonoBehaviour
 
     void Start()
     {
+        // 1) Guardar la puntuación global con la que ENTRAMOS al minijuego
+        if (GlobalGameManager.Instance != null)
+            baseGlobalScore = GlobalGameManager.Instance.totalScore;
+        else
+            baseGlobalScore = 0;
+
+        // 2) La puntuación LOCAL de este minijuego empieza en 0
+        score = 0;
+
+        // 3) Configurar el tiempo
         currentTimeLimit = startTimeLimit;
-        HUDController.Instance.UpdateScore(score);
+        countdown = currentTimeLimit;
+
+        // 4) Mostrar en el HUD: global previa + local
+        if (HUDController.Instance != null)
+            HUDController.Instance.UpdateScore(baseGlobalScore + score);
+
         SpawnHorrocrux();
     }
 
     void Update()
     {
+        if (isGameOver) return;
+
         countdown -= Time.deltaTime;
-        HUDController.Instance.UpdateTimer(countdown);
+        if (HUDController.Instance != null)
+            HUDController.Instance.UpdateTimer(countdown);
+
         if (countdown <= 0f)
-            SceneManager.LoadScene(0); // volver al menú
+        {
+            // Fin del minijuego VR
+            EndGame("Tiempo agotado");
+        }
     }
-    
+
+    void EndGame(string reason)
+    {
+        if (isGameOver) return;
+        isGameOver = true;
+
+        // Fijar puntuación final en el GLOBAL: base + local
+        int finalScore = baseGlobalScore + score;
+
+        if (GlobalGameManager.Instance != null)
+        {
+            GlobalGameManager.Instance.totalScore = finalScore;
+            GlobalGameManager.Instance.GoToNextMinigame();
+        }
+        else
+        {
+            // Si se está jugando fuera de campaña, volver al menú por índice 0
+            SceneManager.LoadScene(0);
+        }
+    }
+
     void SpawnHorrocrux()
     {
         if (spawnPoints == null || spawnPoints.Count == 0)
@@ -55,11 +105,13 @@ public class HorrocruxGameManager : MonoBehaviour
         }
         else
         {
-            if (primera) {
+            if (primera)
+            {
                 newIndex = 8;
                 primera = false;
             }
-            else {
+            else
+            {
                 do
                 {
                     newIndex = Random.Range(0, spawnPoints.Count);
@@ -70,9 +122,10 @@ public class HorrocruxGameManager : MonoBehaviour
 
         lastIndex = newIndex;
 
-        //Animación desaparecer
+        // Animación desaparecer
         var hdDesaparecer = horrocrux.GetComponent<HorrocruxAppearDisappear>();
-        hdDesaparecer.PlayDisappear();
+        if (hdDesaparecer != null)
+            hdDesaparecer.PlayDisappear();
 
         // Obtener punto final
         Transform point = spawnPoints[newIndex];
@@ -82,7 +135,8 @@ public class HorrocruxGameManager : MonoBehaviour
 
         // Animación aparecer
         var hdAparecer = horrocrux.GetComponent<HorrocruxAppearDisappear>();
-        hdAparecer.PlayAppear();
+        if (hdAparecer != null)
+            hdAparecer.PlayAppear();
 
         countdown = currentTimeLimit;
 
@@ -90,17 +144,27 @@ public class HorrocruxGameManager : MonoBehaviour
         if (currentTimeLimit < 2f) currentTimeLimit = 2f;
     }
 
-    // llamado por HorrocruxController
+    // llamado por HorrocruxController cuando lo pillas a tiempo
     public void OnHorrocruxCollected()
     {
+        if (isGameOver) return;
+
         score++;
-        HUDController.Instance.UpdateScore(score);
+
+        if (HUDController.Instance != null)
+            HUDController.Instance.UpdateScore(baseGlobalScore + score);
+
         SpawnHorrocrux();
     }
 
+    // llamado por HorrocruxController cuando miras a la serpiente
     public void OnSnakeViewed()
     {
+        if (isGameOver) return;
+
         score--;
-        HUDController.Instance.UpdateScore(score);
+
+        if (HUDController.Instance != null)
+            HUDController.Instance.UpdateScore(baseGlobalScore + score);
     }
 }
