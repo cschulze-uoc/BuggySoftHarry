@@ -71,7 +71,7 @@ public class ARDementorGame : MonoBehaviour
     public Image chargeGlowImage;
 
     // ---- Estado interno ----
-    int score;
+    int score;                 // PUNTUACIÓN LOCAL de este minijuego
     int lives;
     float timeLeft;
     int dementorsDefeated;
@@ -81,6 +81,9 @@ public class ARDementorGame : MonoBehaviour
     bool isTouching;
     float touchStartTime;
     float chargeProgress;
+
+    // Puntuación global con la que entras a este minijuego
+    int baseGlobalScore;
 
     readonly List<DementorController> aliveDementors = new List<DementorController>();
 
@@ -101,6 +104,15 @@ public class ARDementorGame : MonoBehaviour
     {
         lives = initialLives;
         timeLeft = gameDurationSeconds;
+
+        // Guardamos la puntuación global con la que ENTRAMOS a este minijuego
+        if (GlobalGameManager.Instance != null)
+            baseGlobalScore = GlobalGameManager.Instance.totalScore;
+        else
+            baseGlobalScore = 0;
+
+        // La puntuación local del AR siempre empieza en 0
+        score = 0;
 
         if (gameOverPanel != null)
             gameOverPanel.SetActive(false);
@@ -204,7 +216,7 @@ public class ARDementorGame : MonoBehaviour
             if (chargeGlowImage != null)
             {
                 // Empieza a brillar a partir del 70% de carga
-                float glow = Mathf.Clamp01((chargeProgress - 0.7f) / 0.3f); // 0 cuando <0.7, 1 cuando >=1
+                float glow = Mathf.Clamp01((chargeProgress - 0.7f) / 0.3f);
                 Color gc = chargeGlowImage.color;
                 gc.a = glow * 0.03f;
                 chargeGlowImage.color = gc;
@@ -367,8 +379,11 @@ public class ARDementorGame : MonoBehaviour
     // ==========================
     void UpdateScoreUI()
     {
-        if (scoreText != null)
-            scoreText.text = "Puntuación: " + score;
+        if (scoreText == null) return;
+
+        // Lo que mostramos es: puntuación global anterior + puntuación LOCAL de este minijuego
+        int displayScore = baseGlobalScore + score;
+        scoreText.text = "Puntuación: " + displayScore;
     }
 
     void UpdateLivesUI()
@@ -392,7 +407,9 @@ public class ARDementorGame : MonoBehaviour
     {
         if (isGameOver) return;
 
+        // Solo sumamos a la puntuación LOCAL
         score += 100;
+
         dementorsDefeated++;
         aliveDementors.Remove(dementor);
         UpdateScoreUI();
@@ -431,8 +448,13 @@ public class ARDementorGame : MonoBehaviour
         if (gameOverPanel != null)
             gameOverPanel.SetActive(true);
 
+        // Puntuación final de esta partida (global previa + local)
+        int finalScore = baseGlobalScore + score;
+
         if (finalText != null)
-            finalText.text = $"GAME OVER:\n{reason}\nPuntuación: {score}";
+            finalText.text = $"GAME OVER:\n{reason}\nPuntuación: {finalScore}";
+
+        // NO cambiamos de escena aquí: el jugador decide Retry o Salir.
     }
 
     void ShowMessage(string text, float duration)
@@ -469,18 +491,34 @@ public class ARDementorGame : MonoBehaviour
     }
 
     // ==========================
-    // BOTONES UI (NEW INPUT SYSTEM NO CAMBIA ESTO)
+    // BOTONES UI
     // ==========================
     public void OnRetryButton()
     {
-
+        // Repetimos SOLO este minijuego:
+        // - score local vuelve a 0 (porque Start() lo pone a 0)
+        // - baseGlobalScore se vuelve a leer (mismo valor)
+        // - GlobalGameManager.totalScore NO se ha cambiado aún
         Scene current = SceneManager.GetActiveScene();
         SceneManager.LoadScene(current.name);
     }
 
     public void OnQuitButton()
     {
+        if (GlobalGameManager.Instance != null)
+        {
+            // Puntuación final de esta partida: global previa + local
+            int finalScore = baseGlobalScore + score;
 
-        Application.Quit();
+            GlobalGameManager.Instance.totalScore = finalScore;
+            GlobalGameManager.Instance.GoToNextMinigame();    // pasa al siguiente minijuego (Horrocrux)
+        }
+        else
+        {
+            // Solo si pruebas la escena suelta en el editor
+            UnityEngine.SceneManagement.SceneManager.LoadScene("00_MainMenu");
+        }
     }
+
+
 }
