@@ -51,18 +51,11 @@ public class Tren_Movimiento : MonoBehaviour
 
     public void OnTriggerEnter2D(Collider2D collision)
     {
-<<<<<<< HEAD
-        Switch bif = other.GetComponent<Switch>();
+        Switch bif = collision.GetComponent<Switch>();
         if (bif != null)
         {
             seleccionarRuta(bif.SiguienteTramo().puntos);
         }
-=======
-        // Switch bif = other.GetComponent<Switch>();
-        // if (bif != null)
-        // {
-        //     seleccionarRuta(bif.SiguienteTramo().puntos);
-        // }
->>>>>>> 7ef72de (Producto2)
     }
+
 }
