@@ -6,18 +6,28 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager Instance;
 
+    [Header("UI")]
     public GameObject gameOverPanel;
+    public TextMeshProUGUI scoreText;   //  TEXTO DE PUNTUACIÓN
 
+    [Header("Gameplay")]
     public float winTime = 20f;
+
     private float timer = 0f;
     private bool gameEnded = false;
 
+    private int score = 0;              //  PUNTUACIÓN LOCAL
     private BroomController player;
 
     private void Awake()
     {
         Instance = this;
         player = FindObjectOfType<BroomController>();
+
+        // Inicializar score
+        score = 0;
+        if (scoreText != null)
+            scoreText.text = "0";
     }
 
     private void Update()
@@ -33,6 +43,16 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    // ---------------- PUNTUACIÓN ----------------
+    public void AddScore(int amount)
+    {
+        score += amount;
+
+        if (scoreText != null)
+            scoreText.text = score.ToString();
+    }
+
+    // ---------------- FIN DE JUEGO ----------------
     public void GameOver()
     {
         if (gameEnded) return;
@@ -45,7 +65,6 @@ public class GameManager : MonoBehaviour
 
         Time.timeScale = 0f;
 
-        // Cambiar texto a GAME OVER
         TextMeshProUGUI text = gameOverPanel.GetComponentInChildren<TextMeshProUGUI>();
         if (text != null)
             text.text = "GAME OVER";
@@ -63,7 +82,6 @@ public class GameManager : MonoBehaviour
         if (gameOverPanel != null)
             gameOverPanel.SetActive(true);
 
-        // Cambiar texto a VICTORIA
         TextMeshProUGUI text = gameOverPanel.GetComponentInChildren<TextMeshProUGUI>();
         if (text != null)
             text.text = "¡VICTORIA!";
@@ -80,6 +98,7 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    // ---------------- REINICIO ----------------
     public void RestartMicrogame()
     {
         Time.timeScale = 1f;
