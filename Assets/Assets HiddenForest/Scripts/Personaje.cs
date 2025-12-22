@@ -67,6 +67,22 @@ public class Personaje : MonoBehaviour
         anim.SetFloat("MoveX", vel.x);
         anim.SetFloat("MoveY", vel.y);
 
+        // Guardar última dirección, solo si se está moviendo
+        if (vel.magnitude > 0.1f)
+        {
+            if (Mathf.Abs(vel.y) > Mathf.Abs(vel.x))
+            {
+                if (vel.y > 0)
+                    anim.SetInteger("Direccion", 2); // Espaldas
+                else
+                    anim.SetInteger("Direccion", 0); // Frontal
+            }
+            else
+            {
+                anim.SetInteger("Direccion", 1); // Lateral
+            }
+        }
+
     }
 
     private void Movimiento()
