@@ -61,7 +61,12 @@ public class Personaje : MonoBehaviour
         rig.linearVelocity = movimiento;
 
         // Actualizar animacion
-        anim.SetFloat("Anda", Mathf.Abs(rig.linearVelocity.magnitude));
+        Vector2 vel = rig.linearVelocity;
+
+        anim.SetFloat("Anda", vel.magnitude);
+        anim.SetFloat("MoveX", vel.x);
+        anim.SetFloat("MoveY", vel.y);
+
     }
 
     private void Movimiento()
@@ -84,11 +89,6 @@ public class Personaje : MonoBehaviour
             colRed.offset = new Vector2(-posColX, posColY);
             spritePersonaje.flipX = true;
         }
-
-      
-
-        
-
     }
 
     private void Captura()
