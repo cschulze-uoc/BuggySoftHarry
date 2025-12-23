@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using TMPro;
+using System.Collections;
 
 public class GameManager : MonoBehaviour
 {
@@ -8,16 +9,22 @@ public class GameManager : MonoBehaviour
 
     [Header("UI")]
     public GameObject gameOverPanel;
-    public TextMeshProUGUI scoreText;   //  TEXTO DE PUNTUACIÓN
+    public TextMeshProUGUI scoreText;   // TEXTO DE PUNTUACIÓN
 
     [Header("Gameplay")]
     public float winTime = 20f;
 
+    [Header("Score Animation")]
+    public float scorePopScale = 1.3f;
+    public float scorePopDuration = 0.15f;
+
     private float timer = 0f;
     private bool gameEnded = false;
 
-    private int score = 0;              //  PUNTUACIÓN LOCAL
+    private int score = 0;              // PUNTUACIÓN LOCAL
     private BroomController player;
+
+    private Vector3 scoreOriginalScale;
 
     private void Awake()
     {
@@ -27,7 +34,10 @@ public class GameManager : MonoBehaviour
         // Inicializar score
         score = 0;
         if (scoreText != null)
+        {
             scoreText.text = "0";
+            scoreOriginalScale = scoreText.transform.localScale;
+        }
     }
 
     private void Update()
@@ -49,7 +59,40 @@ public class GameManager : MonoBehaviour
         score += amount;
 
         if (scoreText != null)
+        {
             scoreText.text = score.ToString();
+            StopCoroutine("ScorePop");
+            StartCoroutine("ScorePop");
+        }
+    }
+
+    // ---------------- ANIMACIÓN SCORE ----------------
+    private IEnumerator ScorePop()
+    {
+        float t = 0f;
+        Vector3 targetScale = scoreOriginalScale * scorePopScale;
+
+        // Agrandar
+        while (t < scorePopDuration)
+        {
+            t += Time.unscaledDeltaTime;
+            scoreText.transform.localScale =
+                Vector3.Lerp(scoreOriginalScale, targetScale, t / scorePopDuration);
+            yield return null;
+        }
+
+        t = 0f;
+
+        // Volver a tamaño normal
+        while (t < scorePopDuration)
+        {
+            t += Time.unscaledDeltaTime;
+            scoreText.transform.localScale =
+                Vector3.Lerp(targetScale, scoreOriginalScale, t / scorePopDuration);
+            yield return null;
+        }
+
+        scoreText.transform.localScale = scoreOriginalScale;
     }
 
     // ---------------- FIN DE JUEGO ----------------
