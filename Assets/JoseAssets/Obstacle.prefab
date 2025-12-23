@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2897254577465489343}
   - component: {fileID: 6225415281200708835}
+  - component: {fileID: 7975255772260115925}
   m_Layer: 0
   m_Name: ScoreZone
   m_TagString: Untagged
@@ -66,7 +67,7 @@ BoxCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 2, y: 0}
+  m_Offset: {x: 1.7, y: 0}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -78,6 +79,18 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 1, y: 100}
   m_EdgeRadius: 0
+--- !u!114 &7975255772260115925
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5541560699552931159}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0f38b39cd41fc1f49833b081bf414fbc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ScoreZone
 --- !u!1 &7037674484145820591
 GameObject:
   m_ObjectHideFlags: 0
