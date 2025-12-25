@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 5313337026257364233}
   - component: {fileID: -4530489798190349926}
   - component: {fileID: 3726965350356046630}
+  - component: {fileID: 5674037461063368789}
   m_Layer: 0
   m_Name: AnimalHerido5
   m_TagString: AnimalHerido
@@ -210,6 +211,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DebugDistance
   player: {fileID: 0}
+--- !u!114 &5674037461063368789
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1766080478164107631}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0a65ac855f744384ba832dbd6ab49ce6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Animal
+  estaHerido: 1
 --- !u!1 &4381961263004600064
 GameObject:
   m_ObjectHideFlags: 0

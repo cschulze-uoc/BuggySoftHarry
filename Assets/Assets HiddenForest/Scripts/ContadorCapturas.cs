@@ -1,16 +1,22 @@
 using UnityEngine;
-using UnityEngine.UI;
 using TMPro;
 
-public class GameManager : MonoBehaviour
+public class Contador : MonoBehaviour
 {
-    public int animalesCapturados = 0;
+    public int puntos = 0;
     public TMP_Text contadorTexto;
 
-    public void SumarAnimal()
+    public void CapturarAnimal(Animal animal)
     {
-        animalesCapturados++;
-        contadorTexto.text = "Capturados: " + animalesCapturados;
+        if (animal.estaHerido)
+        {
+            puntos += 1;
+        }
+        else
+        {
+            puntos -= 1;
+        }
+        contadorTexto.text = "Capturados: " + puntos;
     }
 }
 
