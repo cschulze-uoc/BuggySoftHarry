@@ -18,6 +18,9 @@ public class QDGameManager : MonoBehaviour
     public float scorePopScale = 1.3f;
     public float scorePopDuration = 0.15f;
 
+    [Header("Audio")]
+    public AudioSource scoreAudio;   // 🔔 sonido de moneda
+
     private float timer = 0f;
     private bool gameEnded = false;
 
@@ -64,6 +67,10 @@ public class QDGameManager : MonoBehaviour
             StopCoroutine("ScorePop");
             StartCoroutine("ScorePop");
         }
+
+        // 🔔 SONIDO DE PUNTOS
+        if (scoreAudio != null)
+            scoreAudio.Play();
     }
 
     // ---------------- ANIMACIÓN SCORE ----------------

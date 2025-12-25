@@ -6,6 +6,9 @@ public class BroomController : MonoBehaviour
     private Rigidbody2D rb;
     public bool isAlive = true;
 
+    [Header("Audio")]
+    public AudioSource deathAudio;   // 💥 sonido de muerte
+
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -30,7 +33,6 @@ public class BroomController : MonoBehaviour
 
     private void Jump()
     {
-        // reset vertical para que el salto sea consistente
         rb.linearVelocity = new Vector2(rb.linearVelocity.x, 0f);
         rb.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
     }
@@ -40,10 +42,14 @@ public class BroomController : MonoBehaviour
         if (!isAlive) return;
 
         isAlive = false;
-        rb.linearVelocity = Vector2.zero;
-        rb.gravityScale = 0f; // evita caída infinita
 
-        // AVISA AL GAME MANAGER CORRECTO
+        // 💥 SONIDO DE MUERTE
+        if (deathAudio != null)
+            deathAudio.Play();
+
+        rb.linearVelocity = Vector2.zero;
+        rb.gravityScale = 0f;
+
         QDGameManager.Instance.GameOver();
     }
 
