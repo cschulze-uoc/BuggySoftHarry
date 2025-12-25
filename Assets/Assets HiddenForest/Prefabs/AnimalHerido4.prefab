@@ -222,7 +222,7 @@ GameObject:
   - component: {fileID: 1895163051209502942}
   - component: {fileID: 6696720841138931523}
   m_Layer: 0
-  m_Name: AnimacionAnimalherido4
+  m_Name: AnimacionAnimal4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -253,7 +253,7 @@ Animator:
   m_GameObject: {fileID: 1154501059741828191}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 16cbbf887e3208143bd8d16150aa0a60, type: 2}
+  m_Controller: {fileID: 9100000, guid: 67f0b05e920b72845a038f6ba6ca01b0, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0

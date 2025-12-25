@@ -4990,6 +4990,7 @@ GameObject:
   m_Component:
   - component: {fileID: 497863621}
   - component: {fileID: 497863620}
+  - component: {fileID: 497863623}
   m_Layer: 0
   m_Name: Spawner
   m_TagString: Untagged
@@ -5016,6 +5017,12 @@ MonoBehaviour:
   - {fileID: 567004333829761316, guid: 70572e726ba163e48b0c7ae153e8256b, type: 3}
   - {fileID: 1766080478164107631, guid: 6603a3d030ab8df45bd7f5578ffe2cad, type: 3}
   - {fileID: 5817724564256752400, guid: efd12c2c49dcf9c4ca28abee279c15d6, type: 3}
+  - {fileID: 5627634729513195699, guid: e1649c83932127548b4d59516fb92967, type: 3}
+  - {fileID: 1138972047764124467, guid: 34d34662afd9242479c58d136682bfbb, type: 3}
+  - {fileID: 5865110873487889678, guid: 2d342ef1505e0ee4e997351ff4a6bb64, type: 3}
+  - {fileID: 567004333829761316, guid: f2b5fa2acd62eab479f0f13b507157e8, type: 3}
+  - {fileID: 1766080478164107631, guid: 80b96ed772cb9c74a880d9a9058b82bf, type: 3}
+  - {fileID: 5817724564256752400, guid: d63d0be04f2abe442a78cefb46746c2e, type: 3}
   posiciones:
   - {fileID: 3755499944573294232, guid: 9edfe806016a8fd4e8c02b0fc79d29cc, type: 3}
   - {fileID: 1743942753971402574, guid: 9465f4adf609ca94285498da8f5b8ec9, type: 3}
@@ -5040,6 +5047,28 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!95 &497863623
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 497863619}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: ec6f67e3ee652314cb8b2c94e1caa8db, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &519420028
 GameObject:
   m_ObjectHideFlags: 0
