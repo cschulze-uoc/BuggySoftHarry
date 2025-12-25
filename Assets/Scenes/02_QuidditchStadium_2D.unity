@@ -288,7 +288,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::GameManager
   gameOverPanel: {fileID: 299605404}
   scoreText: {fileID: 1420952549}
-  winTime: 50
+  winTime: 60
   scorePopScale: 1.3
   scorePopDuration: 0.15
   scoreAudio: {fileID: 188561433}
@@ -821,10 +821,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ObstacleSpawner
   obstaclePrefab: {fileID: 7037674484145820591, guid: 37fcafc0b4a15b04699694dda6a1c78e, type: 3}
+  goalPrefab: {fileID: 5499351177803677019, guid: 7effdec6412913244a0ccf25d46ba859, type: 3}
   spawnInterval: 3
   minHeight: 0.3
   maxHeight: 1
   groundY: -3.7
+  goalSpawnTime: 55
 --- !u!1 &1126326548
 GameObject:
   m_ObjectHideFlags: 0
