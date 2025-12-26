@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using TMPro;
 using System.Collections;
 
@@ -9,26 +8,26 @@ public class QDGameManager : MonoBehaviour
 
     [Header("UI")]
     public GameObject gameOverPanel;
-    public TextMeshProUGUI scoreText;   // TEXTO DE PUNTUACIÓN
-    public GameObject tapToStartText;   //  TAP PARA VOLAR
+    public TextMeshProUGUI scoreText;
+    public GameObject tapToStartText;
 
     [Header("Gameplay")]
     public float winTime = 20f;
+    public float endDelay = 1.2f;   //  tiempo antes de pasar al siguiente juego
 
     [Header("Score Animation")]
     public float scorePopScale = 1.3f;
     public float scorePopDuration = 0.15f;
 
     [Header("Audio")]
-    public AudioSource scoreAudio;   //  sonido de moneda
+    public AudioSource scoreAudio;
 
     private float timer = 0f;
     private bool gameEnded = false;
-    private bool gameStarted = false;    //  CONTROL DE INICIO
+    private bool gameStarted = false;
 
-    private int score = 0;               // PUNTUACIÓN LOCAL
+    private int score = 0;
     private BroomController player;
-
     private Vector3 scoreOriginalScale;
 
     private void Awake()
@@ -36,7 +35,6 @@ public class QDGameManager : MonoBehaviour
         Instance = this;
         player = FindObjectOfType<BroomController>();
 
-        // Inicializar score
         score = 0;
         if (scoreText != null)
         {
@@ -44,7 +42,7 @@ public class QDGameManager : MonoBehaviour
             scoreOriginalScale = scoreText.transform.localScale;
         }
 
-        // 🔒 JUEGO PAUSADO HASTA TAP
+        // 🔒 Esperar TAP para empezar
         Time.timeScale = 0f;
         gameStarted = false;
 
@@ -54,7 +52,7 @@ public class QDGameManager : MonoBehaviour
 
     private void Update()
     {
-        // ---------- ESPERAR A TAP PARA EMPEZAR ----------
+        // ---------- TAP PARA EMPEZAR ----------
         if (!gameStarted)
         {
             if (Input.GetKeyDown(KeyCode.Space) ||
@@ -66,9 +64,8 @@ public class QDGameManager : MonoBehaviour
             return;
         }
 
-        // ---------- JUEGO NORMAL -----------
+        // ---------- JUEGO NORMAL ----------
         if (gameEnded) return;
-        if (Time.timeScale == 0f) return;
 
         timer += Time.deltaTime;
 
@@ -87,7 +84,7 @@ public class QDGameManager : MonoBehaviour
             tapToStartText.SetActive(false);
     }
 
-    // ---------------- PUNTUACIÓN -----------------
+    // ---------------- PUNTUACIÓN ----------------
     public void AddScore(int amount)
     {
         score += amount;
@@ -99,18 +96,15 @@ public class QDGameManager : MonoBehaviour
             StartCoroutine("ScorePop");
         }
 
-        // 🔔 SONIDO DE PUNTOS
         if (scoreAudio != null)
             scoreAudio.Play();
     }
 
-    // ---------------- ANIMACIÓN SCORE -----------------
     private IEnumerator ScorePop()
     {
         float t = 0f;
         Vector3 targetScale = scoreOriginalScale * scorePopScale;
 
-        // Agrandar
         while (t < scorePopDuration)
         {
             t += Time.unscaledDeltaTime;
@@ -121,7 +115,6 @@ public class QDGameManager : MonoBehaviour
 
         t = 0f;
 
-        // Volver a tamaño normal
         while (t < scorePopDuration)
         {
             t += Time.unscaledDeltaTime;
@@ -133,7 +126,7 @@ public class QDGameManager : MonoBehaviour
         scoreText.transform.localScale = scoreOriginalScale;
     }
 
-    // ---------------- FIN DE JUEGO -----------------
+    // ---------------- FIN DE JUEGO ----------------
     public void GameOver()
     {
         if (gameEnded) return;
@@ -144,11 +137,11 @@ public class QDGameManager : MonoBehaviour
         if (gameOverPanel != null)
             gameOverPanel.SetActive(true);
 
-        Time.timeScale = 0f;
-
         TextMeshProUGUI text = gameOverPanel.GetComponentInChildren<TextMeshProUGUI>();
         if (text != null)
             text.text = "GAME OVER";
+
+        StartCoroutine(EndAndGoNext());
     }
 
     public void WinGame()
@@ -158,14 +151,27 @@ public class QDGameManager : MonoBehaviour
 
         FreezePlayer();
 
-        Time.timeScale = 0f;
-
         if (gameOverPanel != null)
             gameOverPanel.SetActive(true);
 
         TextMeshProUGUI text = gameOverPanel.GetComponentInChildren<TextMeshProUGUI>();
         if (text != null)
             text.text = "¡VICTORIA!";
+
+        StartCoroutine(EndAndGoNext());
+    }
+
+    private IEnumerator EndAndGoNext()
+    {
+        Time.timeScale = 0f;
+        yield return new WaitForSecondsRealtime(endDelay);
+
+        // ➕ sumar puntuación al global
+        if (GlobalGameManager.Instance != null)
+        {
+            GlobalGameManager.Instance.totalScore += score;
+            GlobalGameManager.Instance.GoToNextMinigame();
+        }
     }
 
     private void FreezePlayer()
@@ -177,12 +183,5 @@ public class QDGameManager : MonoBehaviour
             rb.linearVelocity = Vector2.zero;
             rb.gravityScale = 0;
         }
-    }
-
-    // ---------------- REINICIO -----------------
-    public void RestartMicrogame()
-    {
-        Time.timeScale = 1f;
-        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 }
