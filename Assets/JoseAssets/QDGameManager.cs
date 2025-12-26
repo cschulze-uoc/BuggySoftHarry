@@ -10,7 +10,7 @@ public class QDGameManager : MonoBehaviour
     [Header("UI")]
     public GameObject gameOverPanel;
     public TextMeshProUGUI scoreText;   // TEXTO DE PUNTUACIÓN
-    public GameObject tapToStartText;   // 👆 TAP PARA VOLAR
+    public GameObject tapToStartText;   //  TAP PARA VOLAR
 
     [Header("Gameplay")]
     public float winTime = 20f;
@@ -20,11 +20,11 @@ public class QDGameManager : MonoBehaviour
     public float scorePopDuration = 0.15f;
 
     [Header("Audio")]
-    public AudioSource scoreAudio;   // 🔔 sonido de moneda
+    public AudioSource scoreAudio;   //  sonido de moneda
 
     private float timer = 0f;
     private bool gameEnded = false;
-    private bool gameStarted = false;    // 👈 CONTROL DE INICIO
+    private bool gameStarted = false;    //  CONTROL DE INICIO
 
     private int score = 0;               // PUNTUACIÓN LOCAL
     private BroomController player;
@@ -66,7 +66,7 @@ public class QDGameManager : MonoBehaviour
             return;
         }
 
-        // ---------- JUEGO NORMAL ----------
+        // ---------- JUEGO NORMAL -----------
         if (gameEnded) return;
         if (Time.timeScale == 0f) return;
 
@@ -87,7 +87,7 @@ public class QDGameManager : MonoBehaviour
             tapToStartText.SetActive(false);
     }
 
-    // ---------------- PUNTUACIÓN ----------------
+    // ---------------- PUNTUACIÓN -----------------
     public void AddScore(int amount)
     {
         score += amount;
@@ -104,7 +104,7 @@ public class QDGameManager : MonoBehaviour
             scoreAudio.Play();
     }
 
-    // ---------------- ANIMACIÓN SCORE ----------------
+    // ---------------- ANIMACIÓN SCORE -----------------
     private IEnumerator ScorePop()
     {
         float t = 0f;
@@ -133,7 +133,7 @@ public class QDGameManager : MonoBehaviour
         scoreText.transform.localScale = scoreOriginalScale;
     }
 
-    // ---------------- FIN DE JUEGO ----------------
+    // ---------------- FIN DE JUEGO -----------------
     public void GameOver()
     {
         if (gameEnded) return;
@@ -179,7 +179,7 @@ public class QDGameManager : MonoBehaviour
         }
     }
 
-    // ---------------- REINICIO ----------------
+    // ---------------- REINICIO -----------------
     public void RestartMicrogame()
     {
         Time.timeScale = 1f;
