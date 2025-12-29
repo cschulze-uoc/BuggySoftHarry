@@ -9,6 +9,9 @@ public class AnimalSpawner : MonoBehaviour
 
     public float intervalo = 5f;
     public float tiempoVida = 10f;
+    public float distanciaSalto = 2f;
+    public float duracionMovimiento = 0.5f;
+    public int[] posicionesDerecha = { 1, 3, 4 };
 
 
     private List<GameObject> animalesEnPantalla = new List<GameObject>();
@@ -70,9 +73,45 @@ public class AnimalSpawner : MonoBehaviour
         }
     }
 
+    IEnumerator MoverAnimal(GameObject animal, Vector3 destino)
+    {
+        Vector3 inicio = animal.transform.position;
+        float t = 0f;
+
+        while (t < duracionMovimiento)
+        {
+            t += Time.deltaTime;
+            float lerp = t / duracionMovimiento;
+            animal.transform.position = Vector3.Lerp(inicio, destino, lerp);
+            yield return null;
+        }
+
+        animal.transform.position = destino;
+    }
+
     IEnumerator DesaparecerAnimal(GameObject animal, int indexPos)
     {
-        yield return new WaitForSeconds(tiempoVida);
+        yield return null;
+
+        Animator animator = animal.GetComponent<Animator>();
+
+        Vector3 posInicial = animal.transform.position;
+        Vector3 direccion = Vector3.left;
+
+        if (System.Array.Exists(posicionesDerecha, i => i == indexPos+1))
+            direccion = Vector3.right;
+
+        Vector3 posDestino = posInicial + direccion * distanciaSalto;
+
+        if (animator != null)
+            animator.SetTrigger("Salto");
+
+        yield return StartCoroutine(MoverAnimal(animal, posDestino));
+
+        float espera = Mathf.Max(0f, tiempoVida - duracionMovimiento * 2);
+        yield return new WaitForSeconds(espera);
+
+        yield return StartCoroutine(MoverAnimal(animal, posInicial));
 
         Destroy(animal);
         posicionesOcupadas.Remove(indexPos);
