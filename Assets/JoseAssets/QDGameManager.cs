@@ -1,6 +1,7 @@
 using UnityEngine;
 using TMPro;
 using System.Collections;
+using UnityEngine.InputSystem;   //  NEW INPUT SYSTEM
 
 public class QDGameManager : MonoBehaviour
 {
@@ -13,7 +14,7 @@ public class QDGameManager : MonoBehaviour
 
     [Header("Gameplay")]
     public float winTime = 20f;
-    public float endDelay = 1.2f;   //  tiempo antes de pasar al siguiente juego
+    public float endDelay = 1.2f;   // tiempo antes de pasar al siguiente juego
 
     [Header("Score Animation")]
     public float scorePopScale = 1.3f;
@@ -52,15 +53,29 @@ public class QDGameManager : MonoBehaviour
 
     private void Update()
     {
-        // ---------- TAP PARA EMPEZAR ----------
+        // ---------- TAP PARA EMPEZAR (NEW INPUT SYSTEM) ----------
         if (!gameStarted)
         {
-            if (Input.GetKeyDown(KeyCode.Space) ||
-                Input.GetMouseButtonDown(0) ||
-                (Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Began))
-            {
+            bool pressed = false;
+
+            // Teclado (PC)
+            if (Keyboard.current != null &&
+                Keyboard.current.spaceKey.wasPressedThisFrame)
+                pressed = true;
+
+            // Ratón
+            if (Mouse.current != null &&
+                Mouse.current.leftButton.wasPressedThisFrame)
+                pressed = true;
+
+            // Pantalla táctil (móvil)
+            if (Touchscreen.current != null &&
+                Touchscreen.current.primaryTouch.press.wasPressedThisFrame)
+                pressed = true;
+
+            if (pressed)
                 StartGame();
-            }
+
             return;
         }
 
@@ -70,9 +85,7 @@ public class QDGameManager : MonoBehaviour
         timer += Time.deltaTime;
 
         if (timer >= winTime)
-        {
             WinGame();
-        }
     }
 
     private void StartGame()
@@ -92,8 +105,8 @@ public class QDGameManager : MonoBehaviour
         if (scoreText != null)
         {
             scoreText.text = score.ToString();
-            StopCoroutine("ScorePop");
-            StartCoroutine("ScorePop");
+            StopCoroutine(nameof(ScorePop));
+            StartCoroutine(nameof(ScorePop));
         }
 
         if (scoreAudio != null)

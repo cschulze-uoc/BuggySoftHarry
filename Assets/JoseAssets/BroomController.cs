@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.InputSystem;   //  NEW INPUT SYSTEM
 
 public class BroomController : MonoBehaviour
 {
@@ -7,7 +8,7 @@ public class BroomController : MonoBehaviour
     public bool isAlive = true;
 
     [Header("Audio")]
-    public AudioSource deathAudio;   // 💥 sonido de muerte
+    public AudioSource deathAudio;   //  sonido de muerte
 
     private void Awake()
     {
@@ -18,21 +19,34 @@ public class BroomController : MonoBehaviour
     {
         if (!isAlive) return;
 
-        // --- PC (ratón y teclado)
-        if (Input.GetKeyDown(KeyCode.Space) || Input.GetMouseButtonDown(0))
+        // ---------- TECLADO (PC) ----------
+        if (Keyboard.current != null &&
+            Keyboard.current.spaceKey.wasPressedThisFrame)
         {
             Jump();
         }
 
-        // --- MÓVIL (pantalla táctil)
-        if (Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Began)
+        // ---------- RATÓN ----------
+        if (Mouse.current != null &&
+            Mouse.current.leftButton.wasPressedThisFrame)
         {
             Jump();
+        }
+
+        // ---------- TÁCTIL (MÓVIL) ----------
+        if (Touchscreen.current != null)
+        {
+            var touch = Touchscreen.current.primaryTouch;
+            if (touch.press.wasPressedThisFrame)
+            {
+                Jump();
+            }
         }
     }
 
     private void Jump()
     {
+        // Reset vertical para salto consistente
         rb.linearVelocity = new Vector2(rb.linearVelocity.x, 0f);
         rb.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
     }
