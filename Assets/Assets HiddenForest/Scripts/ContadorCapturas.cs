@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
-public class GameManager : MonoBehaviour
+public class GameManagerFF : MonoBehaviour
 {
     public int animalesCapturados = 0;
     public TMP_Text contadorTexto;
