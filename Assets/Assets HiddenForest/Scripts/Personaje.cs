@@ -4,7 +4,6 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 
 [RequireComponent(typeof(Rigidbody2D))]
-
 public class Personaje : MonoBehaviour
 {
     [Header("Movimiento")]
@@ -19,19 +18,17 @@ public class Personaje : MonoBehaviour
     [Header("Joystick")]
     [SerializeField] private Joystick joystick;
 
-    Vector2 inputFinal;
+    private Vector2 inputTeclado;   // Input teclado (Input System)
+    private Vector2 inputJoystick;  // Input joystick virtual
+    private Vector2 inputFinal;
 
-    private Vector2 inputTeclado;   // Teclado
-    private Vector2 inputJoystick;  // Joystick en pantalla
+    private float posColX = 1f;
+    private float posColY = 0f;
 
-
-    private float posColX = 1;
-    private float posColY = 0;
-
-    [Header("SonidoPasos")]
+    [Header("Sonido Pasos")]
     [SerializeField] private AudioSource audioSource;
 
-    [Header("SonidoRed")]
+    [Header("Sonido Red")]
     [SerializeField] private AudioSource audioGolpe;
     [SerializeField] private AudioClip clipGolpe;
 
@@ -58,9 +55,10 @@ public class Personaje : MonoBehaviour
             );
         }
 
-        Vector2 inputFinal = inputJoystick.magnitude > 0.1f ? inputJoystick : inputTeclado;
-        Movimiento(inputFinal);
+        // Prioridad joystick sobre teclado
+        inputFinal = inputJoystick.magnitude > 0.1f ? inputJoystick : inputTeclado;
 
+        Movimiento(inputFinal);
     }
 
     public void OnMove(InputAction.CallbackContext context)
@@ -70,12 +68,10 @@ public class Personaje : MonoBehaviour
 
     public void OnCapture(InputAction.CallbackContext context)
     {
-
         if (context.performed)
         {
             anim.SetTrigger("Captura");
 
-            // Reproducir sonido de golpe si está configurado
             if (audioGolpe != null && clipGolpe != null)
             {
                 audioGolpe.PlayOneShot(clipGolpe);
@@ -85,13 +81,13 @@ public class Personaje : MonoBehaviour
 
     private void Movimiento(Vector2 input)
     {
-        // Movimiento final
+        // Calcular movimiento
         movimiento = input * velocidad;
 
-        // Aplicar velocidad
+        // Aplicar velocidad correctamente
         rig.linearVelocity = movimiento;
 
-        // Girar sprite
+        // Girar sprite y ajustar collider
         if (input.x > 0)
         {
             spritePersonaje.flipX = false;
@@ -117,9 +113,8 @@ public class Personaje : MonoBehaviour
                 anim.SetInteger("Direccion", 1);
         }
 
-        // Audio pasos
-        float velocidadAnim = anim.GetFloat("Anda");
-        if (velocidadAnim > 0.1f)
+        // Audio de pasos
+        if (vel.magnitude > 0.1f)
         {
             if (!audioSource.isPlaying)
                 audioSource.Play();
@@ -130,7 +125,6 @@ public class Personaje : MonoBehaviour
                 audioSource.Pause();
         }
     }
-
 }
 
 
