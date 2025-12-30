@@ -71,7 +71,7 @@ public class Personaje : MonoBehaviour
         if (context.performed)
         {
             anim.SetTrigger("Captura");
-            Debug.Log("Caprurado animal desde Personje");  
+
             if (audioGolpe != null && clipGolpe != null)
             {
                 audioGolpe.PlayOneShot(clipGolpe);
