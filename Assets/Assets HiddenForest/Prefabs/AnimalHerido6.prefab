@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: -3249784744996195239}
   - component: {fileID: 4422806872610134097}
   - component: {fileID: 1666008041490287235}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: AnimalHerido6
   m_TagString: AnimalHerido
   m_Icon: {fileID: 0}
@@ -235,7 +235,7 @@ GameObject:
   - component: {fileID: 615797569837889187}
   - component: {fileID: 769581375774774187}
   - component: {fileID: 5628151635923174425}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: AnimacionAnimalHerido6
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -334,6 +334,6 @@ SpriteRenderer:
   m_Size: {x: 2.42, y: 2.43}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
+  m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0

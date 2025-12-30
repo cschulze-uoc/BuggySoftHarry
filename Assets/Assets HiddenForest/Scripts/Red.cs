@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class PersonajeCaptura: MonoBehaviour
@@ -13,7 +14,7 @@ public class PersonajeCaptura: MonoBehaviour
     private void OnTriggerEnter2D(Collider2D otro)
     {
         Animal animal = otro.GetComponent<Animal>();
-
+        Console.WriteLine("Capturado desde personje");
         if (animal != null)
         {
             contador.CapturarAnimal(animal);
