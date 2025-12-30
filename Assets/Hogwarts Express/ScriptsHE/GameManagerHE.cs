@@ -13,9 +13,16 @@ public class GameManagerHE : MonoBehaviour
 
     private int trenesActivos = 0;
     private bool audioStarted = false;
+
+    // NUEVO: score global al entrar
+    private int baseGlobalScore = 0;
+
+    // NUEVO: evitar doble GameOver
+    private bool finished = false;
+
     private void Awake()
     {
-        if(instance == null)
+        if (instance == null)
         {
             instance = this;
         }
@@ -27,6 +34,12 @@ public class GameManagerHE : MonoBehaviour
 
     private void Start()
     {
+        // NUEVO: leer puntuación global al entrar
+        if (GlobalGameManager.Instance != null)
+            baseGlobalScore = GlobalGameManager.Instance.totalScore;
+        else
+            baseGlobalScore = 0;
+
         ActualizarTexto();
     }
 
@@ -39,11 +52,16 @@ public class GameManagerHE : MonoBehaviour
 
     void ActualizarTexto()
     {
-        textoPuntuacion.text = "Trenes correctos: " + trenesBien + "\nPuntos: " + puntos;
+        // NUEVO: mostrar global + local
+        int displayScore = baseGlobalScore + puntos;
+        textoPuntuacion.text = "Trenes correctos: " + trenesBien + "\nPuntos: " + displayScore;
     }
 
     public void GameOver()
     {
+        if (finished) return;
+        finished = true;
+
         Time.timeScale = 0f;
         StartCoroutine(MostrarGO());
         AudioManagerHE.Instance.StopLocomotora();
@@ -55,13 +73,32 @@ public class GameManagerHE : MonoBehaviour
     {
         yield return new WaitForSecondsRealtime(1f);
         panelGO.SetActive(true);
-        puntuacionFinal.text = "Trenes correctos: " + trenesBien + "\nPuntos totales: " + puntos;
+
+        // NUEVO: puntuación final global + local
+        int finalScore = baseGlobalScore + puntos;
+        puntuacionFinal.text = "Trenes correctos: " + trenesBien + "\nPuntos totales: " + finalScore;
+
+        // NUEVO: esperar un momento y pasar al siguiente juego
+        yield return new WaitForSecondsRealtime(1.5f);
+
+        Time.timeScale = 1f;
+
+        if (GlobalGameManager.Instance != null)
+        {
+            GlobalGameManager.Instance.totalScore = finalScore;
+            GlobalGameManager.Instance.GoToNextMinigame();
+        }
+        else
+        {
+            // si se ejecuta suelto fuera de campaña
+            UnityEngine.SceneManagement.SceneManager.LoadScene("00_MainMenu");
+        }
     }
 
     public void ResgistrarTren()
     {
         trenesActivos++;
-        if(!audioStarted && trenesActivos == 1)
+        if (!audioStarted && trenesActivos == 1)
         {
             audioStarted = true;
             StartCoroutine(StartAudioAfterDelay(0.3f));

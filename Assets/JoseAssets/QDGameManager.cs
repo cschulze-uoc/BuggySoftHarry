@@ -1,6 +1,7 @@
 using UnityEngine;
 using TMPro;
 using System.Collections;
+using UnityEngine.InputSystem;   // NEW INPUT SYSTEM
 
 public class QDGameManager : MonoBehaviour
 {
@@ -13,7 +14,7 @@ public class QDGameManager : MonoBehaviour
 
     [Header("Gameplay")]
     public float winTime = 20f;
-    public float endDelay = 1.2f;   //  tiempo antes de pasar al siguiente juego
+    public float endDelay = 1.2f;   // tiempo antes de pasar al siguiente juego
 
     [Header("Score Animation")]
     public float scorePopScale = 1.3f;
@@ -27,6 +28,8 @@ public class QDGameManager : MonoBehaviour
     private bool gameStarted = false;
 
     private int score = 0;
+    private int baseGlobalScore = 0;   // NUEVO: global al entrar
+
     private BroomController player;
     private Vector3 scoreOriginalScale;
 
@@ -35,10 +38,17 @@ public class QDGameManager : MonoBehaviour
         Instance = this;
         player = FindObjectOfType<BroomController>();
 
+        // Guardar la puntuación global con la que entramos
+        if (GlobalGameManager.Instance != null)
+            baseGlobalScore = GlobalGameManager.Instance.totalScore;
+        else
+            baseGlobalScore = 0;
+
         score = 0;
+
         if (scoreText != null)
         {
-            scoreText.text = "0";
+            scoreText.text = (baseGlobalScore + score).ToString();
             scoreOriginalScale = scoreText.transform.localScale;
         }
 
@@ -55,9 +65,7 @@ public class QDGameManager : MonoBehaviour
         // ---------- TAP PARA EMPEZAR ----------
         if (!gameStarted)
         {
-            if (Input.GetKeyDown(KeyCode.Space) ||
-                Input.GetMouseButtonDown(0) ||
-                (Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Began))
+            if (WasStartPressed())
             {
                 StartGame();
             }
@@ -73,6 +81,28 @@ public class QDGameManager : MonoBehaviour
         {
             WinGame();
         }
+    }
+
+    // NEW INPUT SYSTEM: Space / Click / Tap
+    private bool WasStartPressed()
+    {
+        // Teclado: Space
+        if (Keyboard.current != null && Keyboard.current.spaceKey.wasPressedThisFrame)
+            return true;
+
+        // Ratón: click izquierdo
+        if (Mouse.current != null && Mouse.current.leftButton.wasPressedThisFrame)
+            return true;
+
+        // Táctil: toque
+        if (Touchscreen.current != null)
+        {
+            var touch = Touchscreen.current.primaryTouch;
+            if (touch.press.wasPressedThisFrame)
+                return true;
+        }
+
+        return false;
     }
 
     private void StartGame()
@@ -91,7 +121,7 @@ public class QDGameManager : MonoBehaviour
 
         if (scoreText != null)
         {
-            scoreText.text = score.ToString();
+            scoreText.text = (baseGlobalScore + score).ToString();
             StopCoroutine("ScorePop");
             StartCoroutine("ScorePop");
         }
@@ -166,11 +196,18 @@ public class QDGameManager : MonoBehaviour
         Time.timeScale = 0f;
         yield return new WaitForSecondsRealtime(endDelay);
 
-        // ➕ sumar puntuación al global
+        // Commit score global (base + local) y pasar al siguiente
         if (GlobalGameManager.Instance != null)
         {
-            GlobalGameManager.Instance.totalScore += score;
+            GlobalGameManager.Instance.totalScore = baseGlobalScore + score;
+            Time.timeScale = 1f;
             GlobalGameManager.Instance.GoToNextMinigame();
+        }
+        else
+        {
+            // Si se ejecuta suelto
+            Time.timeScale = 1f;
+            UnityEngine.SceneManagement.SceneManager.LoadScene("00_MainMenu");
         }
     }
 
@@ -180,8 +217,11 @@ public class QDGameManager : MonoBehaviour
         {
             player.isAlive = false;
             Rigidbody2D rb = player.GetComponent<Rigidbody2D>();
-            rb.linearVelocity = Vector2.zero;
-            rb.gravityScale = 0;
+            if (rb != null)
+            {
+                rb.linearVelocity = Vector2.zero;
+                rb.gravityScale = 0;
+            }
         }
     }
 }

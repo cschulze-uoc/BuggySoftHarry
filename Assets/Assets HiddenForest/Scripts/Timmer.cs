@@ -4,17 +4,27 @@ using TMPro;
 public class Timer : MonoBehaviour
 {
     [Header("Configuración")]
-    [SerializeField] private float tiempoInicial = 120f; // 2 minutos
+    [SerializeField] private float tiempoInicial = 120f;
 
     [Header("UI")]
     [SerializeField] private TextMeshProUGUI textoTiempo;
 
+    // NUEVO: referencia al Contador (arrástralo en el inspector)
+    [SerializeField] private Contador contador;
+
     private float tiempoRestante;
     private bool juegoActivo = true;
+
+    // NUEVO
+    private int baseGlobalScore = 0;
 
     private void Start()
     {
         tiempoRestante = tiempoInicial;
+
+        // NUEVO: leer global al entrar
+        baseGlobalScore = (GlobalGameManager.Instance != null) ? GlobalGameManager.Instance.totalScore : 0;
+
         ActualizarTexto();
     }
 
@@ -45,13 +55,26 @@ public class Timer : MonoBehaviour
     {
         juegoActivo = false;
 
-        // Detener el tiempo del juego
         Time.timeScale = 0f;
-
         Debug.Log("FIN DEL JUEGO");
 
-        // Por añadir:
-        // - Mostrar puntuación
-        // - Cambiar a juego siguiente
+        // NUEVO: obtener puntuación local desde Contador
+        int puntosLocal = (contador != null) ? contador.puntos : 0;
+
+        int finalScore = baseGlobalScore + puntosLocal;
+
+        if (GlobalGameManager.Instance != null)
+        {
+            GlobalGameManager.Instance.totalScore = finalScore;
+
+            // IMPORTANTE: reactivar el timeScale antes de cambiar de escena
+            Time.timeScale = 1f;
+            GlobalGameManager.Instance.GoToNextMinigame();
+        }
+        else
+        {
+            Time.timeScale = 1f;
+            UnityEngine.SceneManagement.SceneManager.LoadScene("00_MainMenu");
+        }
     }
 }

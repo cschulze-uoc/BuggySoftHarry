@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using TMPro;
-using UnityEngine.InputSystem;   // <- NUEVO INPUT SYSTEM
+using UnityEngine.InputSystem;
 
 public class ARDementorGame : MonoBehaviour
 {
@@ -20,7 +20,7 @@ public class ARDementorGame : MonoBehaviour
     public TextMeshProUGUI timeText;
     public TextMeshProUGUI messageText;
 
-    [Header("UI Game Over")]
+    [Header("UI Game Over (solo modo individual)")]
     public GameObject gameOverPanel;
     public TextMeshProUGUI finalText;
 
@@ -59,22 +59,24 @@ public class ARDementorGame : MonoBehaviour
     public Vector3 dementorModelEulerOffset = new Vector3(-90f, 180f, 270f);
 
     [Header("Golpe cargado")]
-    public float chargeThreshold = 0.5f;   // seg para que sea cargado
+    public float chargeThreshold = 0.5f;
     public int normalDamage = 1;
     public int chargedDamage = 2;
 
     [Header("Golpe cargado UI")]
-    public GameObject chargeIcon;          // objeto Image cerca de la varita
-    public Image chargeIconImage;          // componente Image
+    public GameObject chargeIcon;
+    public Image chargeIconImage;
 
     [Header("Efecto de brillo al cargar")]
     public Image chargeGlowImage;
 
+    [Header("Fin en campaña")]
+    public float campaignEndDelay = 1.0f; // pequeño delay antes de saltar en campaña
+
     // ---- Estado interno ----
-    int score;                 // PUNTUACIÓN LOCAL de este minijuego
+    int score;     // LOCAL
     int lives;
     float timeLeft;
-    int dementorsDefeated;
     float spawnTimer;
     bool isGameOver;
 
@@ -82,7 +84,6 @@ public class ARDementorGame : MonoBehaviour
     float touchStartTime;
     float chargeProgress;
 
-    // Puntuación global con la que entras a este minijuego
     int baseGlobalScore;
 
     readonly List<DementorController> aliveDementors = new List<DementorController>();
@@ -105,15 +106,13 @@ public class ARDementorGame : MonoBehaviour
         lives = initialLives;
         timeLeft = gameDurationSeconds;
 
-        // Guardamos la puntuación global con la que ENTRAMOS a este minijuego
-        if (GlobalGameManager.Instance != null)
-            baseGlobalScore = GlobalGameManager.Instance.totalScore;
-        else
-            baseGlobalScore = 0;
+        // Global al entrar
+        baseGlobalScore = (GlobalGameManager.Instance != null) ? GlobalGameManager.Instance.totalScore : 0;
 
-        // La puntuación local del AR siempre empieza en 0
+        // Local empieza en 0
         score = 0;
 
+        // En campaña, NO queremos que aparezca el panel (aunque exista en escena)
         if (gameOverPanel != null)
             gameOverPanel.SetActive(false);
 
@@ -146,7 +145,7 @@ public class ARDementorGame : MonoBehaviour
         if (timeLeft <= 0f)
         {
             timeLeft = 0f;
-            GameOver("Tiempo agotado");
+            EndGame("Tiempo agotado");
         }
         UpdateTimeUI();
 
@@ -161,32 +160,21 @@ public class ARDementorGame : MonoBehaviour
             spawnTimer = GetCurrentSpawnInterval();
         }
 
-        // ==========================
-        // INPUT TÁCTIL / RATÓN (NEW INPUT SYSTEM)
-        // ==========================
-
-        // 1) Táctil (móvil)
+        // INPUT (New Input System)
         if (Touchscreen.current != null)
         {
             var touch = Touchscreen.current.primaryTouch;
 
-            if (touch.press.wasPressedThisFrame)
-            {
-                StartCharging();
-            }
+            if (touch.press.wasPressedThisFrame) StartCharging();
             else if (touch.press.wasReleasedThisFrame)
             {
                 Vector2 pos = touch.position.ReadValue();
                 StopChargingAndShoot(pos);
             }
         }
-        // 2) Ratón (editor / PC)
         else if (Mouse.current != null)
         {
-            if (Mouse.current.leftButton.wasPressedThisFrame)
-            {
-                StartCharging();
-            }
+            if (Mouse.current.leftButton.wasPressedThisFrame) StartCharging();
             else if (Mouse.current.leftButton.wasReleasedThisFrame)
             {
                 Vector2 pos = Mouse.current.position.ReadValue();
@@ -194,12 +182,11 @@ public class ARDementorGame : MonoBehaviour
             }
         }
 
-        // ==========================
-        // ANIMACIÓN ICONO CARGA
-        // ==========================
+        // Animación carga
         if (isTouching && chargeIcon != null)
         {
             chargeProgress = Mathf.Clamp01((Time.time - touchStartTime) / chargeThreshold);
+
             if (chargeIconImage != null)
                 chargeIconImage.fillAmount = chargeProgress;
 
@@ -215,7 +202,6 @@ public class ARDementorGame : MonoBehaviour
 
             if (chargeGlowImage != null)
             {
-                // Empieza a brillar a partir del 70% de carga
                 float glow = Mathf.Clamp01((chargeProgress - 0.7f) / 0.3f);
                 Color gc = chargeGlowImage.color;
                 gc.a = glow * 0.03f;
@@ -223,15 +209,13 @@ public class ARDementorGame : MonoBehaviour
             }
 
             if (chargeProgress >= 1f)
-            {
                 chargeIcon.transform.Rotate(Vector3.forward * 120f * Time.deltaTime);
-            }
         }
 
         if (!isTouching && chargeGlowImage != null)
         {
             Color gc = chargeGlowImage.color;
-            gc.a = Mathf.MoveTowards(gc.a, 0f, Time.deltaTime * 2f); // se desvanece rápido
+            gc.a = Mathf.MoveTowards(gc.a, 0f, Time.deltaTime * 2f);
             chargeGlowImage.color = gc;
         }
     }
@@ -295,7 +279,7 @@ public class ARDementorGame : MonoBehaviour
     int GetCurrentHealth()
     {
         float t = GetDifficultyFactor();
-        return baseDementorHealth + Mathf.FloorToInt(t * 3f); // 1..4 vidas
+        return baseDementorHealth + Mathf.FloorToInt(t * 3f);
     }
 
     float GetCurrentSpeed()
@@ -305,16 +289,14 @@ public class ARDementorGame : MonoBehaviour
     }
 
     // ==========================
-    // ATAQUE DEL JUGADOR
+    // ATAQUE
     // ==========================
     void HandleScreenTap(Vector2 screenPos, bool charged)
     {
         if (arCamera == null || spellPrefab == null) return;
 
         Ray ray = arCamera.ScreenPointToRay(screenPos);
-        RaycastHit hit;
-
-        if (Physics.Raycast(ray, out hit, 20f))
+        if (Physics.Raycast(ray, out RaycastHit hit, 20f))
         {
             DementorController dementor = hit.collider.GetComponentInParent<DementorController>();
             if (dementor != null)
@@ -327,20 +309,16 @@ public class ARDementorGame : MonoBehaviour
 
                 SpellController spell = spellObj.GetComponent<SpellController>();
                 if (spell != null)
-                {
                     spell.damage = charged ? chargedDamage : normalDamage;
-                }
 
                 if (charged)
-                {
                     PlaySound(sfxCast);
-                }
             }
         }
     }
 
     // ==========================
-    // SPAWN DEMENTORES
+    // SPAWN
     // ==========================
     void SpawnDementor()
     {
@@ -366,10 +344,7 @@ public class ARDementorGame : MonoBehaviour
         DementorController dementor = obj.GetComponent<DementorController>();
         if (dementor != null)
         {
-            int health = GetCurrentHealth();
-            float speed = GetCurrentSpeed();
-
-            dementor.Init(this, arCamera.transform, health, speed);
+            dementor.Init(this, arCamera.transform, GetCurrentHealth(), GetCurrentSpeed());
             aliveDementors.Add(dementor);
         }
     }
@@ -380,8 +355,6 @@ public class ARDementorGame : MonoBehaviour
     void UpdateScoreUI()
     {
         if (scoreText == null) return;
-
-        // Lo que mostramos es: puntuación global anterior + puntuación LOCAL de este minijuego
         int displayScore = baseGlobalScore + score;
         scoreText.text = "Puntuación: " + displayScore;
     }
@@ -399,7 +372,6 @@ public class ARDementorGame : MonoBehaviour
         int seconds = Mathf.CeilToInt(timeLeft);
         int minutes = seconds / 60;
         int secs = seconds % 60;
-
         timeText.text = $"Tiempo: {minutes:00}:{secs:00}";
     }
 
@@ -407,10 +379,7 @@ public class ARDementorGame : MonoBehaviour
     {
         if (isGameOver) return;
 
-        // Solo sumamos a la puntuación LOCAL
-        score += 100;
-
-        dementorsDefeated++;
+        score += 10;
         aliveDementors.Remove(dementor);
         UpdateScoreUI();
 
@@ -433,28 +402,52 @@ public class ARDementorGame : MonoBehaviour
         ShowMessage("¡Te ha alcanzado un dementor!", 1.5f);
 
         if (lives <= 0)
-        {
-            GameOver("Te has quedado sin vidas");
-        }
+            EndGame("Te has quedado sin vidas");
     }
 
-    void GameOver(string reason)
+    // ==========================
+    // FIN (campaña vs individual)
+    // ==========================
+    void EndGame(string reason)
     {
         if (isGameOver) return;
         isGameOver = true;
 
         ShowMessage("", 0f);
 
-        if (gameOverPanel != null)
-            gameOverPanel.SetActive(true);
-
-        // Puntuación final de esta partida (global previa + local)
         int finalScore = baseGlobalScore + score;
 
-        if (finalText != null)
-            finalText.text = $"GAME OVER:\n{reason}\nPuntuación: {finalScore}";
+        bool isCampaign = (GlobalGameManager.Instance != null && GlobalGameManager.Instance.IsCampaignActive);
 
-        // NO cambiamos de escena aquí: el jugador decide Retry o Salir.
+        if (isCampaign)
+        {
+            // Campaña: guardar global y saltar
+            GlobalGameManager.Instance.totalScore = finalScore;
+
+            // opcional: mostrar un mensaje corto en HUD (sin panel)
+            ShowMessage($"Fin AR: {reason}", campaignEndDelay);
+
+            StartCoroutine(GoNextAfterDelay(campaignEndDelay));
+        }
+        else
+        {
+            // Individual: mostrar panel Retry/Salir
+            if (gameOverPanel != null)
+                gameOverPanel.SetActive(true);
+
+            if (finalText != null)
+                finalText.text = $"GAME OVER:\n{reason}\nPuntuación: {finalScore}";
+        }
+    }
+
+    System.Collections.IEnumerator GoNextAfterDelay(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+
+        if (GlobalGameManager.Instance != null)
+            GlobalGameManager.Instance.GoToNextMinigame();
+        else
+            SceneManager.LoadScene("00_MainMenu");
     }
 
     void ShowMessage(string text, float duration)
@@ -485,40 +478,20 @@ public class ARDementorGame : MonoBehaviour
         AudioSource.PlayClipAtPoint(clip, arCamera.transform.position);
     }
 
-    public bool IsGameOver()
-    {
-        return isGameOver;
-    }
+    public bool IsGameOver() => isGameOver;
 
     // ==========================
-    // BOTONES UI
+    // BOTONES (solo individual)
     // ==========================
     public void OnRetryButton()
     {
-        // Repetimos SOLO este minijuego:
-        // - score local vuelve a 0 (porque Start() lo pone a 0)
-        // - baseGlobalScore se vuelve a leer (mismo valor)
-        // - GlobalGameManager.totalScore NO se ha cambiado aún
         Scene current = SceneManager.GetActiveScene();
         SceneManager.LoadScene(current.name);
     }
 
     public void OnQuitButton()
     {
-        if (GlobalGameManager.Instance != null)
-        {
-            // Puntuación final de esta partida: global previa + local
-            int finalScore = baseGlobalScore + score;
-
-            GlobalGameManager.Instance.totalScore = finalScore;
-            GlobalGameManager.Instance.GoToNextMinigame();    // pasa al siguiente minijuego (Horrocrux)
-        }
-        else
-        {
-            // Solo si pruebas la escena suelta en el editor
-            UnityEngine.SceneManagement.SceneManager.LoadScene("00_MainMenu");
-        }
+        // Individual: salir al menú
+        SceneManager.LoadScene("00_MainMenu");
     }
-
-
 }

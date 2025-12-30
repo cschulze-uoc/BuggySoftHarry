@@ -7,7 +7,7 @@ public class GlobalGameManager : MonoBehaviour
     public static GlobalGameManager Instance { get; private set; }
 
     [Header("Escenas de minijuegos en orden")]
-    public string[] minigameSceneNames;   // ej: 0 = 04_PatronusDementors_AR, 1 = 06_ChamberOfSecrets_VR
+    public string[] minigameSceneNames;
 
     [Header("Nombre de la escena final")]
     public string finalScoreSceneName = "99_FinalScore";
@@ -19,6 +19,10 @@ public class GlobalGameManager : MonoBehaviour
     public List<int> highScores = new List<int>();
 
     int currentMinigameIndex = -1;
+
+    // ? NUEVO: saber si estamos en campaña o en juego suelto
+    [SerializeField] private bool isCampaignActive = false;
+    public bool IsCampaignActive => isCampaignActive;
 
     void Awake()
     {
@@ -35,9 +39,9 @@ public class GlobalGameManager : MonoBehaviour
     }
 
     // --- INICIO DE CAMPAÑA DESDE EL MENÚ ---
-
     public void StartMinigameSequence()
     {
+        isCampaignActive = true;
         totalScore = 0;
         currentMinigameIndex = 0;
 
@@ -51,10 +55,32 @@ public class GlobalGameManager : MonoBehaviour
         }
     }
 
-    // --- CAMBIO ENTRE MINIJUEGOS ---
+    // ? NUEVO: empezar un juego suelto (SIN campaña)
+    public void StartSingleMinigame(string sceneName)
+    {
+        isCampaignActive = false;
+        currentMinigameIndex = -1;   
+        totalScore = 0;              
+        SceneManager.LoadScene(sceneName);
+    }
 
+    // ? NUEVO: terminar campaña manualmente (si quieres)
+    public void EndCampaign()
+    {
+        isCampaignActive = false;
+        currentMinigameIndex = -1;
+    }
+
+    // --- CAMBIO ENTRE MINIJUEGOS ---
     public void GoToNextMinigame()
     {
+        // ? Si NO es campaña, no hacemos “game loop”
+        if (!isCampaignActive)
+        {
+            SceneManager.LoadScene("00_MainMenu");
+            return;
+        }
+
         if (minigameSceneNames == null || minigameSceneNames.Length == 0)
         {
             SceneManager.LoadScene("00_MainMenu");
@@ -63,13 +89,11 @@ public class GlobalGameManager : MonoBehaviour
 
         currentMinigameIndex++;
 
-        // Aún quedan minijuegos
         if (currentMinigameIndex >= 0 && currentMinigameIndex < minigameSceneNames.Length)
         {
             string sceneName = minigameSceneNames[currentMinigameIndex];
             SceneManager.LoadScene(sceneName);
         }
-        // Ya hemos jugado todos -> ir a escena final
         else
         {
             SceneManager.LoadScene(finalScoreSceneName);
@@ -77,13 +101,12 @@ public class GlobalGameManager : MonoBehaviour
     }
 
     // --- TOP 5 PUNTUACIONES ---
-
     public void RegisterFinalScore(int finalScore)
     {
         if (finalScore <= 0) return;
 
         highScores.Add(finalScore);
-        highScores.Sort((a, b) => b.CompareTo(a));   // de mayor a menor
+        highScores.Sort((a, b) => b.CompareTo(a));
 
         if (highScores.Count > 5)
             highScores.RemoveRange(5, highScores.Count - 5);

@@ -149,7 +149,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GlobalGameManager
   minigameSceneNames:
+  - 01_HogwartsExpress_2D
+  - 03_ForbiddenForset_2D
   - 04_PatronusDementors_AR
+  - 02_QuidditchStadium_2D
   - 06_ChamberOfSecrets_VR
   finalScoreSceneName: 99_FinalScore
   totalScore: 0

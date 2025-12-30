@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.InputSystem; // NEW INPUT SYSTEM
 
 public class BroomController : MonoBehaviour
 {
@@ -18,16 +19,29 @@ public class BroomController : MonoBehaviour
     {
         if (!isAlive) return;
 
-        // --- PC (ratón y teclado)
-        if (Input.GetKeyDown(KeyCode.Space) || Input.GetMouseButtonDown(0))
+        // --- Teclado: Space
+        if (Keyboard.current != null && Keyboard.current.spaceKey.wasPressedThisFrame)
         {
             Jump();
+            return;
         }
 
-        // --- MÓVIL (pantalla táctil)
-        if (Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Began)
+        // --- Ratón: click izquierdo
+        if (Mouse.current != null && Mouse.current.leftButton.wasPressedThisFrame)
         {
             Jump();
+            return;
+        }
+
+        // --- Móvil: tap
+        if (Touchscreen.current != null)
+        {
+            var touch = Touchscreen.current.primaryTouch;
+            if (touch.press.wasPressedThisFrame)
+            {
+                Jump();
+                return;
+            }
         }
     }
 
@@ -43,14 +57,14 @@ public class BroomController : MonoBehaviour
 
         isAlive = false;
 
-        // 💥 SONIDO DE MUERTE
         if (deathAudio != null)
             deathAudio.Play();
 
         rb.linearVelocity = Vector2.zero;
         rb.gravityScale = 0f;
 
-        QDGameManager.Instance.GameOver();
+        if (QDGameManager.Instance != null)
+            QDGameManager.Instance.GameOver();
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
