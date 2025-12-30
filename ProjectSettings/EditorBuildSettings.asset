@@ -18,7 +18,7 @@ EditorBuildSettings:
     path: Assets/Scenes/02_QuidditchStadium_2D.unity
     guid: 205cb5f2037450e459bd5e17578f48fc
   - enabled: 1
-    path: Assets/Scenes/03_ForbiddenForset_2D.unity
+    path: Assets/Scenes/03_ForbiddenForest_2D.unity
     guid: ec74a2e4dfa672a49a1bad335eb2421a
   - enabled: 1
     path: Assets/Scenes/04_PatronusDementors_AR.unity
