@@ -5059,7 +5059,7 @@ Animator:
   m_GameObject: {fileID: 497863619}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: ec6f67e3ee652314cb8b2c94e1caa8db, type: 2}
+  m_Controller: {fileID: 0}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -5170,9 +5170,9 @@ Camera:
   m_LensShift: {x: 0, y: 0}
   m_NormalizedViewPortRect:
     serializedVersion: 2
-    x: 0.08597285
+    x: 0
     y: 0
-    width: 0.82855713
+    width: 1
     height: 1
   near clip plane: 0.3
   far clip plane: 1000
