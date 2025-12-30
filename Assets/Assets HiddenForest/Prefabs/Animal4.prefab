@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: -267539876648360824}
   - component: {fileID: 999490922826343898}
   - component: {fileID: 4309938372990283482}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Animal4
   m_TagString: AnimalHerido
   m_Icon: {fileID: 0}
@@ -68,7 +68,7 @@ CapsuleCollider2D:
   m_CallbackLayers:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
@@ -248,7 +248,7 @@ GameObject:
   - component: {fileID: 5382594735752899462}
   - component: {fileID: 1895163051209502942}
   - component: {fileID: 6696720841138931523}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: AnimacionAnimalherido4
   m_TagString: Untagged
   m_Icon: {fileID: 0}

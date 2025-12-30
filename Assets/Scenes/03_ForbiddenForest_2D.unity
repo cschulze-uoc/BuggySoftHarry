@@ -274,7 +274,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 79.8, y: -262.3}
+  m_AnchoredPosition: {x: -68, y: -275.2}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &242521320
@@ -4437,7 +4437,7 @@ GameObject:
   - component: {fileID: 345491049}
   - component: {fileID: 345491051}
   - component: {fileID: 345491052}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: AnimacionPersonaje
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5171,9 +5171,9 @@ Camera:
   m_NormalizedViewPortRect:
     serializedVersion: 2
     x: 0
-    y: 0
+    y: 0.07962963
     width: 1
-    height: 1
+    height: 0.8413672
   near clip plane: 0.3
   far clip plane: 1000
   field of view: 34
@@ -5223,7 +5223,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Unity.RenderPipelines.Universal.2D.Runtime::UnityEngine.Rendering.Universal.PixelPerfectCamera
   m_ComponentVersion: 1
   m_AssetsPPU: 100
-  m_RefResolutionX: 1920
+  m_RefResolutionX: 2282
   m_RefResolutionY: 1080
   m_CropFrame: 4
   m_GridSnapping: 0
@@ -5353,7 +5353,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 120, y: 120}
+  m_AnchoredPosition: {x: 171.5, y: 163.9}
   m_SizeDelta: {x: 192, y: 192}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &651749260
@@ -5572,7 +5572,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -208.1, y: -215}
+  m_AnchoredPosition: {x: -357.8, y: -229.8}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1034134712
@@ -5717,7 +5717,7 @@ GameObject:
   - component: {fileID: 1068124111}
   - component: {fileID: 1068124110}
   - component: {fileID: 1068124112}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Personaje
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -6173,7 +6173,7 @@ GameObject:
   - component: {fileID: 1584953471}
   - component: {fileID: 1584953472}
   - component: {fileID: 1584953473}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: ColRed
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -6202,7 +6202,7 @@ BoxCollider2D:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1584953470}
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 3
   m_Density: 1
   m_Material: {fileID: 0}
@@ -6229,7 +6229,7 @@ BoxCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 1, y: 0}
+  m_Offset: {x: 2.6279085, y: 0.02453947}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -6239,7 +6239,7 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 0.8769407, y: 1}
+  m_Size: {x: 2.4195251, y: 4.417142}
   m_EdgeRadius: 0
 --- !u!114 &1584953473
 MonoBehaviour:
@@ -6684,7 +6684,7 @@ GameObject:
   - component: {fileID: 1979044628}
   - component: {fileID: 1979044627}
   - component: {fileID: 1979044626}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Tilemap_Colisiones
   m_TagString: Untagged
   m_Icon: {fileID: 0}
