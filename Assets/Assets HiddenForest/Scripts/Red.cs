@@ -1,22 +1,22 @@
-using System.Collections;
-using System.Collections.Generic;
-using System.Text.RegularExpressions;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class PersonajeCaptura: MonoBehaviour
 {
-    private BoxCollider2D colRed;
+    private Contador contador;
 
-    private void Awake()
+    private void Start()
     {
-        colRed = GetComponent<BoxCollider2D>();
+        contador = FindObjectOfType<Contador>();
     }
+
+
     private void OnTriggerEnter2D(Collider2D otro)
     {
-        if (otro.CompareTag("AnimalHerido"))
+        Animal animal = otro.GetComponent<Animal>();
+
+        if (animal != null)
         {
-            FindObjectOfType<GameManager>().SumarAnimal();
+            contador.CapturarAnimal(animal);
             Destroy(otro.gameObject);
         }
     }
