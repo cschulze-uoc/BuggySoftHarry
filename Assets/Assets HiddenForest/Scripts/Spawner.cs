@@ -110,10 +110,11 @@ public class AnimalSpawner : MonoBehaviour
             yield break;
 
         Animator animator = animal.GetComponentInChildren<Animator>();
+        SpriteRenderer sprite = animal.GetComponentInChildren<SpriteRenderer>();
         Vector3 posInicial = animal.transform.position;
         Vector3 posDestino = posInicial + direccion * distanciaSalto;
 
-        // Activar animación de salto
+        // Activar animación de salto al aparecer
         if (animator != null)
             animator.SetTrigger("Salto");
 
@@ -122,7 +123,15 @@ public class AnimalSpawner : MonoBehaviour
         float espera = Mathf.Max(0f, tiempoVida - duracionMovimiento * 2);
         yield return new WaitForSeconds(espera);
 
-        // Volver a la posición inicial
+        // Antes de volver, invertir horizontalmente el sprite
+        if (sprite != null)
+            sprite.flipX = !sprite.flipX; // cambia la dirección
+
+        // Volver a activar animación de salto
+        if (animator != null)
+            animator.SetTrigger("Salto");
+
+        // Mover de vuelta a la posición inicial
         yield return StartCoroutine(MoverAnimal(animal, posInicial));
 
         if (animal != null)
@@ -131,6 +140,7 @@ public class AnimalSpawner : MonoBehaviour
         posicionesOcupadas.Remove(indexPos);
         animalesEnPantalla.RemoveAll(a => a == null);
     }
+
 }
 
 
