@@ -9,7 +9,10 @@ public class AnimalSpawner : MonoBehaviour
 
     public float intervalo = 5f;
     public float tiempoVida = 10f;
+    public float distanciaSalto = 2f;
+    public float duracionMovimiento = 0.5f;
 
+    public int[] posicionesDerecha = { 1, 3, 4 };
 
     private List<GameObject> animalesEnPantalla = new List<GameObject>();
     private HashSet<int> posicionesOcupadas = new HashSet<int>();
@@ -25,7 +28,7 @@ public class AnimalSpawner : MonoBehaviour
         {
             yield return new WaitForSeconds(intervalo);
 
-            // animales disponibles
+            // Animales disponibles
             List<GameObject> animalesDisponibles = new List<GameObject>();
             foreach (var animalPrefab in animalesPrefabs)
             {
@@ -39,7 +42,7 @@ public class AnimalSpawner : MonoBehaviour
             if (animalesDisponibles.Count == 0)
                 continue;
 
-            // posiciones libres
+            // Posiciones libres
             List<int> posicionesLibres = new List<int>();
             for (int i = 0; i < posiciones.Length; i++)
             {
@@ -50,32 +53,80 @@ public class AnimalSpawner : MonoBehaviour
             if (posicionesLibres.Count == 0)
                 continue;
 
-            // elegir animal
             GameObject animalPrefabElegido =
                 animalesDisponibles[Random.Range(0, animalesDisponibles.Count)];
 
-            // elegir posicion visible
-            int indexPos = posicionesLibres[Random.Range(0, posicionesLibres.Count)];
+            int indexPos =
+                posicionesLibres[Random.Range(0, posicionesLibres.Count)];
+
             Transform posVisible = posiciones[indexPos];
 
             posicionesOcupadas.Add(indexPos);
 
+            GameObject animal =
+                Instantiate(animalPrefabElegido, posVisible.position, Quaternion.identity);
 
-            // Instanciar en la posicion oculta
-            GameObject animal = Instantiate(animalPrefabElegido, posVisible.position, Quaternion.identity);
             animalesEnPantalla.Add(animal);
 
-            // Iniciar secuencia completa
             StartCoroutine(DesaparecerAnimal(animal, indexPos));
         }
     }
 
+    IEnumerator MoverAnimal(GameObject animal, Vector3 destino)
+    {
+        if (animal == null)
+            yield break;
+
+        Vector3 inicio = animal.transform.position;
+        float t = 0f;
+
+        while (t < duracionMovimiento)
+        {
+            if (animal == null)
+                yield break;
+
+            t += Time.deltaTime;
+            float lerp = t / duracionMovimiento;
+            animal.transform.position = Vector3.Lerp(inicio, destino, lerp);
+            yield return null;
+        }
+
+        if (animal != null)
+            animal.transform.position = destino;
+    }
+
     IEnumerator DesaparecerAnimal(GameObject animal, int indexPos)
     {
-        yield return new WaitForSeconds(tiempoVida);
+        if (animal == null)
+            yield break;
 
-        Destroy(animal);
+        Animator animator = animal.GetComponent<Animator>();
+
+        Vector3 posInicial = animal.transform.position;
+        Vector3 direccion = Vector3.left;
+
+        if (System.Array.Exists(posicionesDerecha, i => i == indexPos + 1))
+            direccion = Vector3.right;
+
+        Vector3 posDestino = posInicial + direccion * distanciaSalto;
+
+        if (animator != null)
+            animator.SetTrigger("Salto");
+
+        yield return StartCoroutine(MoverAnimal(animal, posDestino));
+
+        float espera = Mathf.Max(0f, tiempoVida - duracionMovimiento * 2);
+        yield return new WaitForSeconds(espera);
+
+        yield return StartCoroutine(MoverAnimal(animal, posInicial));
+
+        if (animal != null)
+        {
+            Destroy(animal);
+        }
+
         posicionesOcupadas.Remove(indexPos);
-        animalesEnPantalla.Remove(animal);
+        animalesEnPantalla.RemoveAll(a => a == null);
     }
 }
+
