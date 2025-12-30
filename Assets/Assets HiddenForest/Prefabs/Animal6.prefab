@@ -235,6 +235,7 @@ GameObject:
   - component: {fileID: 615797569837889187}
   - component: {fileID: 769581375774774187}
   - component: {fileID: 5628151635923174425}
+  - component: {fileID: 4312584066152708661}
   m_Layer: 0
   m_Name: AnimacionAnimal6
   m_TagString: Untagged
@@ -337,3 +338,15 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &4312584066152708661
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6999664217543631091}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: adc7546a230c76b448e6288b501db8e2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AnimatorDebugger
