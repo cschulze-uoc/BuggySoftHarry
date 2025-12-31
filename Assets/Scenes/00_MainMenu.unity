@@ -150,14 +150,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::GlobalGameManager
   minigameSceneNames:
   - 01_HogwartsExpress_2D
-  - 03_ForbiddenForset_2D
+  - 03_ForbiddenForest_2D
   - 04_PatronusDementors_AR
   - 02_QuidditchStadium_2D
   - 06_ChamberOfSecrets_VR
   sceneOrientations:
   - sceneName: 01_HogwartsExpress_2D
     orientation: 0
-  - sceneName: 03_ForbiddenForset_2D
+  - sceneName: 03_ForbiddenForest_2D
     orientation: 0
   - sceneName: 04_PatronusDementors_AR
     orientation: 1
@@ -2386,7 +2386,7 @@ MonoBehaviour:
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
-          m_StringArgument: 03_ForbiddenForset_2D
+          m_StringArgument: 03_ForbiddenForest_2D
           m_BoolArgument: 0
         m_CallState: 2
 --- !u!114 &2005799560

@@ -6,6 +6,13 @@ public class Contador : MonoBehaviour
     public int puntos = 0;
     public TMP_Text contadorTexto;
 
+    private void Start()
+    {
+        if (GlobalGameManager.Instance != null)
+            puntos = GlobalGameManager.Instance.totalScore;
+        else
+            puntos = 0;
+    }
     public void CapturarAnimal(Animal animal)
     {
         if (animal.estaHerido)

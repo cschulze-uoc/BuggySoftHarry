@@ -25,6 +25,8 @@ public class Personaje : MonoBehaviour
     private float posColX = 1f;
     private float posColY = 0f;
 
+    private Contador contador;
+
     [Header("Sonido Pasos")]
     [SerializeField] private AudioSource audioSource;
 
@@ -34,6 +36,8 @@ public class Personaje : MonoBehaviour
 
     private void Awake()
     {
+        contador = FindObjectOfType<Contador>();
+
         rig = GetComponent<Rigidbody2D>();
         anim = GetComponentInChildren<Animator>();
         spritePersonaje = GetComponentInChildren<SpriteRenderer>();
@@ -123,6 +127,17 @@ public class Personaje : MonoBehaviour
         {
             if (audioSource.isPlaying)
                 audioSource.Pause();
+        }
+    }
+
+    private void OnTriggerEnter2D(Collider2D otro)
+    {
+        Animal animal = otro.GetComponent<Animal>();
+        Debug.Log("Capturado desde personje");
+        if (animal != null)
+        {
+            contador.CapturarAnimal(animal);
+            Destroy(otro.gameObject);
         }
     }
 }
