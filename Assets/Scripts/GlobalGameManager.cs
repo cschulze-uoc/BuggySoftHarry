@@ -53,8 +53,7 @@ public class GlobalGameManager : MonoBehaviour
 
         if (minigameSceneNames != null && minigameSceneNames.Length > 0)
         {
-            StartCoroutine(ApplyOrientationForScene(minigameSceneNames[0]));
-            SceneManager.LoadScene(minigameSceneNames[0]);
+            StartCoroutine(ChangeOrientationAndLoadScene(minigameSceneNames[0]));
         }
         else
         {
@@ -70,10 +69,7 @@ public class GlobalGameManager : MonoBehaviour
         isCampaignActive = false;
         currentMinigameIndex = -1;   
         totalScore = 0;    
-        Debug.Log($"ApplyOrientationForScene {sceneName}");
-        StartCoroutine(ApplyOrientationForScene(sceneName));
-        Debug.Log($"Cargando escena {sceneName}");
-        SceneManager.LoadScene(sceneName);
+        StartCoroutine(ChangeOrientationAndLoadScene(sceneName));
     }
 
     // ? NUEVO: terminar campa�a manualmente (si quieres)
@@ -89,15 +85,13 @@ public class GlobalGameManager : MonoBehaviour
         // ? Si NO es campa�a, no hacemos �game loop�
         if (!isCampaignActive)
         {
-            StartCoroutine(ApplyOrientationForScene("00_MainMenu"));
-            SceneManager.LoadScene("00_MainMenu");
+            StartCoroutine(ChangeOrientationAndLoadScene("00_MainMenu"));
             return;
         }
 
         if (minigameSceneNames == null || minigameSceneNames.Length == 0)
         {
-            StartCoroutine(ApplyOrientationForScene("00_MainMenu"));
-            SceneManager.LoadScene("00_MainMenu");
+            StartCoroutine(ChangeOrientationAndLoadScene("00_MainMenu"));
             return;
         }
 
@@ -106,13 +100,11 @@ public class GlobalGameManager : MonoBehaviour
         if (currentMinigameIndex >= 0 && currentMinigameIndex < minigameSceneNames.Length)
         {
             string sceneName = minigameSceneNames[currentMinigameIndex];
-            StartCoroutine(ApplyOrientationForScene(sceneName));
-            SceneManager.LoadScene(sceneName);
+            StartCoroutine(ChangeOrientationAndLoadScene(sceneName));
         }
         else
         {
-            StartCoroutine(ApplyOrientationForScene(finalScoreSceneName));
-            SceneManager.LoadScene(finalScoreSceneName);
+            StartCoroutine(ChangeOrientationAndLoadScene(finalScoreSceneName));
         }
     }
 
@@ -155,7 +147,8 @@ public class GlobalGameManager : MonoBehaviour
         PlayerPrefs.Save();
     }
 
-    IEnumerator ApplyOrientationForScene(string sceneName)
+    
+    void ApplyOrientationForScene(string sceneName)
     {
         foreach (var config in sceneOrientations)
         {
@@ -165,16 +158,24 @@ public class GlobalGameManager : MonoBehaviour
                     ? ScreenOrientation.LandscapeLeft
                     : ScreenOrientation.Portrait;
 
-                Debug.Log($"Cambiando la orientación a {orientacion}");
+                Debug.Log($"Cambiando orientación a {orientacion}");
                 Screen.orientation = orientacion;
-
-                // Espera NO bloqueante
-                yield return new WaitForSeconds(0.2f);
-                yield break;
+                return;
             }
         }
 
         Screen.orientation = ScreenOrientation.Portrait;
+    }
+
+    IEnumerator ChangeOrientationAndLoadScene(string sceneName)
+    {
+        ApplyOrientationForScene(sceneName);
+
+        // Espera mínima real (Android-friendly)
+        yield return null;                 // 1 frame
+        yield return new WaitForSeconds(0.4f); // 100 ms (ajustable)
+
+        SceneManager.LoadScene(sceneName);
     }
 }
 
