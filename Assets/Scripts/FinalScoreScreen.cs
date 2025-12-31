@@ -50,6 +50,9 @@ public class FinalScoreScreen : MonoBehaviour
 
     public void OnBackToMenuButton()
     {
+        if (GlobalGameManager.Instance != null)
+            GlobalGameManager.Instance.totalScore = 0;
+
         SceneManager.LoadScene("00_MainMenu");
     }
 }
