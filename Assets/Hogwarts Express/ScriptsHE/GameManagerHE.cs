@@ -34,7 +34,7 @@ public class GameManagerHE : MonoBehaviour
 
     private void Start()
     {
-        // NUEVO: leer puntuación global al entrar
+        // NUEVO: leer puntuaciï¿½n global al entrar
         if (GlobalGameManager.Instance != null)
             baseGlobalScore = GlobalGameManager.Instance.totalScore;
         else
@@ -74,7 +74,7 @@ public class GameManagerHE : MonoBehaviour
         yield return new WaitForSecondsRealtime(1f);
         panelGO.SetActive(true);
 
-        // NUEVO: puntuación final global + local
+        // NUEVO: puntuaciï¿½n final global + local
         int finalScore = baseGlobalScore + puntos;
         puntuacionFinal.text = "Trenes correctos: " + trenesBien + "\nPuntos totales: " + finalScore;
 
@@ -86,11 +86,12 @@ public class GameManagerHE : MonoBehaviour
         if (GlobalGameManager.Instance != null)
         {
             GlobalGameManager.Instance.totalScore = finalScore;
+            Debug.Log($"PuntuaciÃ³n actualizada a {GlobalGameManager.Instance.totalScore}");
             GlobalGameManager.Instance.GoToNextMinigame();
         }
         else
         {
-            // si se ejecuta suelto fuera de campaña
+            // si se ejecuta suelto fuera de campaï¿½a
             UnityEngine.SceneManagement.SceneManager.LoadScene("00_MainMenu");
         }
     }

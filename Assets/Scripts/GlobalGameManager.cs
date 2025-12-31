@@ -12,7 +12,7 @@ public class GlobalGameManager : MonoBehaviour
     [Header("Nombre de la escena final")]
     public string finalScoreSceneName = "99_FinalScore";
 
-    [Header("Puntuación total de la partida actual")]
+    [Header("Puntuaciï¿½n total de la partida actual")]
     public int totalScore = 0;
 
     [Header("Top 5 mejores puntuaciones (globales)")]
@@ -20,7 +20,7 @@ public class GlobalGameManager : MonoBehaviour
 
     int currentMinigameIndex = -1;
 
-    // ? NUEVO: saber si estamos en campaña o en juego suelto
+    // ? NUEVO: saber si estamos en campaï¿½a o en juego suelto
     [SerializeField] private bool isCampaignActive = false;
     public bool IsCampaignActive => isCampaignActive;
 
@@ -36,9 +36,10 @@ public class GlobalGameManager : MonoBehaviour
         DontDestroyOnLoad(gameObject);
 
         LoadHighScores();
+        Screen.orientation = ScreenOrientation.LandscapeLeft;
     }
 
-    // --- INICIO DE CAMPAÑA DESDE EL MENÚ ---
+    // --- INICIO DE CAMPAï¿½A DESDE EL MENï¿½ ---
     public void StartMinigameSequence()
     {
         isCampaignActive = true;
@@ -55,7 +56,7 @@ public class GlobalGameManager : MonoBehaviour
         }
     }
 
-    // ? NUEVO: empezar un juego suelto (SIN campaña)
+    // ? NUEVO: empezar un juego suelto (SIN campaï¿½a)
     public void StartSingleMinigame(string sceneName)
     {
         isCampaignActive = false;
@@ -64,7 +65,7 @@ public class GlobalGameManager : MonoBehaviour
         SceneManager.LoadScene(sceneName);
     }
 
-    // ? NUEVO: terminar campaña manualmente (si quieres)
+    // ? NUEVO: terminar campaï¿½a manualmente (si quieres)
     public void EndCampaign()
     {
         isCampaignActive = false;
@@ -74,7 +75,7 @@ public class GlobalGameManager : MonoBehaviour
     // --- CAMBIO ENTRE MINIJUEGOS ---
     public void GoToNextMinigame()
     {
-        // ? Si NO es campaña, no hacemos “game loop”
+        // ? Si NO es campaï¿½a, no hacemos ï¿½game loopï¿½
         if (!isCampaignActive)
         {
             SceneManager.LoadScene("00_MainMenu");

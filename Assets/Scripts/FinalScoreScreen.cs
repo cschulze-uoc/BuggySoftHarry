@@ -22,9 +22,9 @@ public class FinalScoreScreen : MonoBehaviour
         // Registrar esta run en el top 5
         GlobalGameManager.Instance.RegisterFinalScore(finalScore);
 
-        // Mostrar puntuación total
+        // Mostrar puntuaciÃ³n total
         if (finalScoreText != null)
-            finalScoreText.text = "Puntuación total: " + finalScore;
+            finalScoreText.text = "PuntuaciÃ³n total: " + finalScore;
 
         // Mostrar ranking
         if (highScoresText != null)
@@ -34,7 +34,7 @@ public class FinalScoreScreen : MonoBehaviour
 
             if (hs.Count == 0)
             {
-                sb.AppendLine("Aún no hay puntuaciones.");
+                sb.AppendLine("AÃºn no hay puntuaciones.");
             }
             else
             {

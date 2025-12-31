@@ -4,7 +4,7 @@ using UnityEngine.UI;
 
 public class HUDController : MonoBehaviour
 {
-     public static HUDController Instance;
+    public static HUDController Instance;
 
     public TextMeshProUGUI scoreText;
     public TextMeshProUGUI timerText;
@@ -17,7 +17,7 @@ public class HUDController : MonoBehaviour
 
     public void UpdateScore(int score)
     {
-        scoreText.text = "Horrocruxes: " + score;
+        scoreText.text = "Puntos: " + score;
     }
 
     public void UpdateTimer(float time)

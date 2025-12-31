@@ -2,8 +2,6 @@ using UnityEngine;
 
 public class SnakeController : MonoBehaviour
 {
-    // public Material InactiveMaterial;
-    // public Material GazedAtMaterial;
 
     private Renderer _renderer;
 
@@ -15,7 +13,6 @@ public class SnakeController : MonoBehaviour
     void Start()
     {
         _renderer = GetComponent<Renderer>();
-        // SetMaterial(false);
     }
 
     void Update()
@@ -36,10 +33,6 @@ public class SnakeController : MonoBehaviour
                 // Reseteamos estados locales
                 gazeTimer = 0f;
                 isGazed = false;
-                // SetMaterial(false);
-                
-                // AudioManager.Instance.StopHover();
-                // AudioManager.Instance.PlayCollect();
             }
         }
         else
@@ -55,7 +48,6 @@ public class SnakeController : MonoBehaviour
     public void OnPointerEnter()
     {
         isGazed = true;
-        // SetMaterial(true);
         AudioManager.Instance.PlayLose();
     }
 
@@ -63,16 +55,8 @@ public class SnakeController : MonoBehaviour
     {
         isGazed = false;
         gazeTimer = 0f;
-        // SetMaterial(false);
-        
-        // AudioManager.Instance.StopHover();
+
     }
 
-    // private void SetMaterial(bool gazedAt)
-    // {
-    //     if (InactiveMaterial != null && GazedAtMaterial != null)
-    //     {
-    //         _renderer.material = gazedAt ? GazedAtMaterial : InactiveMaterial;
-    //     }
-    // }
+
 }

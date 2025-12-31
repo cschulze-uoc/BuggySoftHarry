@@ -21,7 +21,7 @@ public class HorrocruxGameManager : MonoBehaviour
     public Transform horrocrux;               // El único horrocrux
     public List<Transform> spawnPoints;       // Lista de puntos posibles
     public float startTimeLimit = 12f;
-    public float timeDecreasePerHorrocrux = 1.5f;
+    public float timeDecreasePerHorrocrux = 1f;
 
     private float currentTimeLimit;
     private float countdown;
@@ -42,6 +42,7 @@ public class HorrocruxGameManager : MonoBehaviour
         // 2) La puntuación LOCAL de este minijuego empieza en 0
         score = 0;
 
+        Screen.orientation = ScreenOrientation.LandscapeLeft;
         // 3) Configurar el tiempo
         currentTimeLimit = startTimeLimit;
         countdown = currentTimeLimit;
@@ -149,7 +150,7 @@ public class HorrocruxGameManager : MonoBehaviour
     {
         if (isGameOver) return;
 
-        score++;
+        score +=10;
 
         if (HUDController.Instance != null)
             HUDController.Instance.UpdateScore(baseGlobalScore + score);
@@ -162,7 +163,7 @@ public class HorrocruxGameManager : MonoBehaviour
     {
         if (isGameOver) return;
 
-        score--;
+        score -= 5;
 
         if (HUDController.Instance != null)
             HUDController.Instance.UpdateScore(baseGlobalScore + score);

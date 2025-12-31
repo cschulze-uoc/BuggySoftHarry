@@ -3,10 +3,9 @@ using UnityEngine;
 public class BasiliskMovement : MonoBehaviour
 {
     public Transform[] waypoints;
-    public float moveSpeed = 1.5f;
-    public float rotateSpeed = 3f;
+    public float moveSpeed = 12f;
     public float arriveDistance = 0.5f;
-    public float waitAtPoint = 1f;
+    public float waitAtPoint = 0.1f;
 
     private int currentIndex = 0;
     private float waitTimer = 0f;
@@ -32,20 +31,10 @@ public class BasiliskMovement : MonoBehaviour
 
         Transform target = waypoints[currentIndex];
 
-        // --- Rotación suave (si la quieres, descomenta) ---
-        /*
-        Vector3 dir = target.position - transform.position;
-        if (dir.sqrMagnitude > 0.001f)
-        {
-            Quaternion targetRot = Quaternion.LookRotation(dir);
-            transform.rotation = Quaternion.Slerp(transform.rotation, targetRot, rotateSpeed * Time.deltaTime);
-        }
-        */
-
-        // --- Movimiento ---
+        // Movimiento
         transform.position = Vector3.MoveTowards(transform.position, target.position, moveSpeed * Time.deltaTime);
 
-        // --- Comprobación de llegada ---
+        // Comprobación de llegada
         float dist = Vector3.Distance(transform.position, target.position);
 
         if (dist < arriveDistance)

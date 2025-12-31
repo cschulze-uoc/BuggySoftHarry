@@ -20,11 +20,18 @@ public class Timer : MonoBehaviour
 
     private void Start()
     {
+        if (GlobalGameManager.Instance != null)
+            baseGlobalScore = GlobalGameManager.Instance.totalScore;
+        else
+            baseGlobalScore = 0;
+         
         tiempoRestante = tiempoInicial;
 
         // NUEVO: leer global al entrar
         baseGlobalScore = (GlobalGameManager.Instance != null) ? GlobalGameManager.Instance.totalScore : 0;
-
+        contador.puntos = baseGlobalScore;
+        Debug.Log($"Actualizado puntos iniciales forest a {contador.puntos}");
+        contador.Inicializar();
         ActualizarTexto();
     }
 
@@ -61,11 +68,12 @@ public class Timer : MonoBehaviour
         // NUEVO: obtener puntuación local desde Contador
         int puntosLocal = (contador != null) ? contador.puntos : 0;
 
-        int finalScore = baseGlobalScore + puntosLocal;
+        // int finalScore = baseGlobalScore + puntosLocal;
 
         if (GlobalGameManager.Instance != null)
         {
-            GlobalGameManager.Instance.totalScore = finalScore;
+            // GlobalGameManager.Instance.totalScore = finalScore;
+            GlobalGameManager.Instance.totalScore = puntosLocal;
 
             // IMPORTANTE: reactivar el timeScale antes de cambiar de escena
             Time.timeScale = 1f;

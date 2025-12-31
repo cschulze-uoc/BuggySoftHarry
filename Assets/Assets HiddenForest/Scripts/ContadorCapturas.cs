@@ -10,13 +10,19 @@ public class Contador : MonoBehaviour
     {
         if (animal.estaHerido)
         {
-            puntos += 1;
+            puntos += 10;
         }
         else
         {
-            puntos -= 1;
+            puntos -= 5;
         }
-        contadorTexto.text = "Capturados: " + puntos;
+        contadorTexto.text = "Puntos: " + puntos;
+    }
+
+    public void Inicializar()
+    {
+        contadorTexto.text = "Puntos: " + puntos;
+        
     }
 }
 
