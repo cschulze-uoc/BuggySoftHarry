@@ -60,7 +60,6 @@ public class AnimalSpawner : MonoBehaviour
                 posicionesLibres[Random.Range(0, posicionesLibres.Count)];
 
             Transform posVisible = posiciones[indexPos];
-
             posicionesOcupadas.Add(indexPos);
 
             GameObject animal =
@@ -68,7 +67,17 @@ public class AnimalSpawner : MonoBehaviour
 
             animalesEnPantalla.Add(animal);
 
-            StartCoroutine(DesaparecerAnimal(animal, indexPos));
+            // Determinar dirección
+            Vector3 direccion = Vector3.left;
+            if (System.Array.Exists(posicionesDerecha, i => i == indexPos + 1))
+                direccion = Vector3.right;
+
+            // Invertir sprite si va hacia la derecha
+            SpriteRenderer sprite = animal.GetComponentInChildren<SpriteRenderer>();
+            if (sprite != null)
+                sprite.flipX = direccion.x > 0;
+
+            StartCoroutine(DesaparecerAnimal(animal, indexPos, direccion));
         }
     }
 
@@ -95,21 +104,17 @@ public class AnimalSpawner : MonoBehaviour
             animal.transform.position = destino;
     }
 
-    IEnumerator DesaparecerAnimal(GameObject animal, int indexPos)
+    IEnumerator DesaparecerAnimal(GameObject animal, int indexPos, Vector3 direccion)
     {
         if (animal == null)
             yield break;
 
-        Animator animator = animal.GetComponent<Animator>();
-
+        Animator animator = animal.GetComponentInChildren<Animator>();
+        SpriteRenderer sprite = animal.GetComponentInChildren<SpriteRenderer>();
         Vector3 posInicial = animal.transform.position;
-        Vector3 direccion = Vector3.left;
-
-        if (System.Array.Exists(posicionesDerecha, i => i == indexPos + 1))
-            direccion = Vector3.right;
-
         Vector3 posDestino = posInicial + direccion * distanciaSalto;
 
+        // Activar animación de salto al aparecer
         if (animator != null)
             animator.SetTrigger("Salto");
 
@@ -118,15 +123,24 @@ public class AnimalSpawner : MonoBehaviour
         float espera = Mathf.Max(0f, tiempoVida - duracionMovimiento * 2);
         yield return new WaitForSeconds(espera);
 
+        // Antes de volver, invertir horizontalmente el sprite
+        if (sprite != null)
+            sprite.flipX = !sprite.flipX; // cambia la dirección
+
+        // Volver a activar animación de salto
+        if (animator != null)
+            animator.SetTrigger("Salto");
+
+        // Mover de vuelta a la posición inicial
         yield return StartCoroutine(MoverAnimal(animal, posInicial));
 
         if (animal != null)
-        {
             Destroy(animal);
-        }
 
         posicionesOcupadas.Remove(indexPos);
         animalesEnPantalla.RemoveAll(a => a == null);
     }
+
 }
+
 

@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Ceiling
   - Ground
+  - AnimalHerido
   layers:
   - Default
   - TransparentFX
@@ -13,10 +14,10 @@ TagManager:
   - Interactive
   - Water
   - UI
-  - 
-  - 
-  - 
-  - 
+  - Personaje
+  - Arbustos
+  - Red
+  - Animales
   - 
   - 
   - 

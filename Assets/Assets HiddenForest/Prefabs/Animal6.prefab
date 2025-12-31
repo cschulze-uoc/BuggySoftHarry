@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: -3249784744996195239}
   - component: {fileID: 4422806872610134097}
   - component: {fileID: 2938905505109098383}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Animal6
   m_TagString: AnimalHerido
   m_Icon: {fileID: 0}
@@ -67,7 +67,7 @@ CapsuleCollider2D:
   m_CallbackLayers:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
@@ -235,7 +235,8 @@ GameObject:
   - component: {fileID: 615797569837889187}
   - component: {fileID: 769581375774774187}
   - component: {fileID: 5628151635923174425}
-  m_Layer: 0
+  - component: {fileID: 4312584066152708661}
+  m_Layer: 9
   m_Name: AnimacionAnimal6
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -337,3 +338,15 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &4312584066152708661
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6999664217543631091}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: adc7546a230c76b448e6288b501db8e2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AnimatorDebugger
