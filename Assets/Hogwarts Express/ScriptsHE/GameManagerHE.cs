@@ -39,7 +39,6 @@ public class GameManagerHE : MonoBehaviour
             baseGlobalScore = GlobalGameManager.Instance.totalScore;
         else
             baseGlobalScore = 0;
-
         ActualizarTexto();
     }
 

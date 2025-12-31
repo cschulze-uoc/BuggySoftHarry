@@ -154,6 +154,17 @@ MonoBehaviour:
   - 04_PatronusDementors_AR
   - 02_QuidditchStadium_2D
   - 06_ChamberOfSecrets_VR
+  sceneOrientations:
+  - sceneName: 01_HogwartsExpress_2D
+    orientation: 0
+  - sceneName: 03_ForbiddenForset_2D
+    orientation: 0
+  - sceneName: 04_PatronusDementors_AR
+    orientation: 1
+  - sceneName: 02_QuidditchStadium_2D
+    orientation: 0
+  - sceneName: 06_ChamberOfSecrets_VR
+    orientation: 0
   finalScoreSceneName: 99_FinalScore
   totalScore: 0
   highScores: 
@@ -915,9 +926,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 596951656}
-        m_TargetAssemblyTypeName: SceneLoader, Assembly-CSharp
-        m_MethodName: LoadSceneByName
+      - m_Target: {fileID: 740320092}
+        m_TargetAssemblyTypeName: GameManager_Menu, Assembly-CSharp
+        m_MethodName: StartSingleGame
         m_Mode: 5
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -965,6 +976,50 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 646157091}
   m_CullTransparentMesh: 1
+--- !u!1 &740320091
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 740320093}
+  - component: {fileID: 740320092}
+  m_Layer: 0
+  m_Name: GameManager_Menu
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &740320092
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 740320091}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c61d8540982236e46866b5a0e74dad11, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GameManager_Menu
+--- !u!4 &740320093
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 740320091}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0.03978, y: 1.47271, z: 10.24307}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &821464427
 GameObject:
   m_ObjectHideFlags: 0
@@ -1184,9 +1239,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 596951656}
-        m_TargetAssemblyTypeName: SceneLoader, Assembly-CSharp
-        m_MethodName: LoadSceneByName
+      - m_Target: {fileID: 740320092}
+        m_TargetAssemblyTypeName: GameManager_Menu, Assembly-CSharp
+        m_MethodName: StartSingleGame
         m_Mode: 5
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1978,9 +2033,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 596951656}
-        m_TargetAssemblyTypeName: SceneLoader, Assembly-CSharp
-        m_MethodName: LoadSceneByName
+      - m_Target: {fileID: 740320092}
+        m_TargetAssemblyTypeName: GameManager_Menu, Assembly-CSharp
+        m_MethodName: StartSingleGame
         m_Mode: 5
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -2111,9 +2166,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 596951656}
-        m_TargetAssemblyTypeName: SceneLoader, Assembly-CSharp
-        m_MethodName: LoadSceneByName
+      - m_Target: {fileID: 740320092}
+        m_TargetAssemblyTypeName: GameManager_Menu, Assembly-CSharp
+        m_MethodName: StartSingleGame
         m_Mode: 5
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -2244,9 +2299,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 596951656}
-        m_TargetAssemblyTypeName: SceneLoader, Assembly-CSharp
-        m_MethodName: LoadSceneByName
+      - m_Target: {fileID: 740320092}
+        m_TargetAssemblyTypeName: GameManager_Menu, Assembly-CSharp
+        m_MethodName: StartSingleGame
         m_Mode: 5
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -2304,3 +2359,4 @@ SceneRoots:
   - {fileID: 46232902}
   - {fileID: 596951657}
   - {fileID: 41221293}
+  - {fileID: 740320093}

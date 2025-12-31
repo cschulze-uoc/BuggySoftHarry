@@ -1,4 +1,6 @@
+using System.Collections;
 using System.Collections.Generic;
+using System.Threading;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -8,6 +10,9 @@ public class GlobalGameManager : MonoBehaviour
 
     [Header("Escenas de minijuegos en orden")]
     public string[] minigameSceneNames;
+
+    [Header("Orientación por escena")]
+    public List<SceneOrientationConfig> sceneOrientations = new();
 
     [Header("Nombre de la escena final")]
     public string finalScoreSceneName = "99_FinalScore";
@@ -36,7 +41,7 @@ public class GlobalGameManager : MonoBehaviour
         DontDestroyOnLoad(gameObject);
 
         LoadHighScores();
-        Screen.orientation = ScreenOrientation.LandscapeLeft;
+        Screen.orientation = ScreenOrientation.Portrait;
     }
 
     // --- INICIO DE CAMPA�A DESDE EL MEN� ---
@@ -48,6 +53,7 @@ public class GlobalGameManager : MonoBehaviour
 
         if (minigameSceneNames != null && minigameSceneNames.Length > 0)
         {
+            StartCoroutine(ApplyOrientationForScene(minigameSceneNames[0]));
             SceneManager.LoadScene(minigameSceneNames[0]);
         }
         else
@@ -59,9 +65,14 @@ public class GlobalGameManager : MonoBehaviour
     // ? NUEVO: empezar un juego suelto (SIN campa�a)
     public void StartSingleMinigame(string sceneName)
     {
+        Debug.Log($"StartSingleMinigame {sceneName}");
+
         isCampaignActive = false;
         currentMinigameIndex = -1;   
-        totalScore = 0;              
+        totalScore = 0;    
+        Debug.Log($"ApplyOrientationForScene {sceneName}");
+        StartCoroutine(ApplyOrientationForScene(sceneName));
+        Debug.Log($"Cargando escena {sceneName}");
         SceneManager.LoadScene(sceneName);
     }
 
@@ -78,12 +89,14 @@ public class GlobalGameManager : MonoBehaviour
         // ? Si NO es campa�a, no hacemos �game loop�
         if (!isCampaignActive)
         {
+            StartCoroutine(ApplyOrientationForScene("00_MainMenu"));
             SceneManager.LoadScene("00_MainMenu");
             return;
         }
 
         if (minigameSceneNames == null || minigameSceneNames.Length == 0)
         {
+            StartCoroutine(ApplyOrientationForScene("00_MainMenu"));
             SceneManager.LoadScene("00_MainMenu");
             return;
         }
@@ -93,10 +106,12 @@ public class GlobalGameManager : MonoBehaviour
         if (currentMinigameIndex >= 0 && currentMinigameIndex < minigameSceneNames.Length)
         {
             string sceneName = minigameSceneNames[currentMinigameIndex];
+            StartCoroutine(ApplyOrientationForScene(sceneName));
             SceneManager.LoadScene(sceneName);
         }
         else
         {
+            StartCoroutine(ApplyOrientationForScene(finalScoreSceneName));
             SceneManager.LoadScene(finalScoreSceneName);
         }
     }
@@ -139,4 +154,39 @@ public class GlobalGameManager : MonoBehaviour
 
         PlayerPrefs.Save();
     }
+
+    IEnumerator ApplyOrientationForScene(string sceneName)
+    {
+        foreach (var config in sceneOrientations)
+        {
+            if (config.sceneName == sceneName)
+            {
+                var orientacion = config.orientation == SceneOrientation.Landscape
+                    ? ScreenOrientation.LandscapeLeft
+                    : ScreenOrientation.Portrait;
+
+                Debug.Log($"Cambiando la orientación a {orientacion}");
+                Screen.orientation = orientacion;
+
+                // Espera NO bloqueante
+                yield return new WaitForSeconds(0.2f);
+                yield break;
+            }
+        }
+
+        Screen.orientation = ScreenOrientation.Portrait;
+    }
+}
+
+public enum SceneOrientation
+{
+    Landscape,
+    Portrait
+}
+
+[System.Serializable]
+public class SceneOrientationConfig
+{
+    public string sceneName;
+    public SceneOrientation orientation;
 }
